@@ -82,8 +82,6 @@ def create_dataframe(activity_uuid=[],
         data["Value"] = value
 
     return pd.DataFrame(data)
-    # df.to_excel(f"./xlsx/{file_name}.xlsx", sheet_name=sheetname, index=False)
-    # print(f"generate --{file_name}-- random data success!")
 
 
 def sector_mapping(raw_sectors):
@@ -174,12 +172,12 @@ def generate_purchases(category_name, length):
     print(f"generate --{category_name}-- random data success!")
 
 
-def generate_logistics(category_name, length):
-    sheet_list = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_air", "distanceBased_road", "distanceBased_sea", "moneyBased_amount"]
-
+def generate_logistics(category_name, sheet_list, length):
+    print(f"----> start to generate --{category_name}-- data...")
     with pd.ExcelWriter(f"./xlsx/{category_name}.xlsx") as xlsx:
         for sheet in sheet_list:
             activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
+
             for i in range(length):
                 activity_uuid.append(raw_data.logistics_activity_uuid[np.random.randint(0, 220)])
                 activity_name.append(raw_data.logistics_activity_name[np.random.randint(0, 120)])
@@ -213,129 +211,133 @@ def generate_logistics(category_name, length):
                 value=value
             )
             df.to_excel(xlsx, sheet_name=sheet, index=False)
-
-    # df.to_excel(f"./xlsx/{category_name}.xlsx", sheet_name=category_name, index=False)
-    # print(f"generate --{category_name}-- random data success!")
+            print(f"generate --{category_name}-- --{sheet}-- random data success!")
 
 
-def generate_waste(category_name, length):
-    activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
+def generate_waste(category_name, sheet_list, length):
+    print(f"----> start to generate --{category_name}-- data...")
+    with pd.ExcelWriter(f"./xlsx/{category_name}.xlsx") as xlsx:
+        for sheet in sheet_list:
+            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
-    for i in range(length):
-        activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
-        activity_name.append(raw_data.waste_activity_name[np.random.randint(0, 520)])
-        store_id.append(np.random.randint(1, 50))
-        geography.append(raw_data.waste_geography[np.random.randint(0, 40)])
-        special_activity_type.append("ordinary transforming activity")
-        sector.append("Waste Treatment & Recycling")
-        isic_classification.append(raw_data.waste_isic_classification[np.random.randint(0, 13)])
-        isic_section.append(raw_data.waste_isic_sector[np.random.randint(0, 4)])
-        time_period.append(get_random_date())
-        product_uuid.append(raw_data.purchase_product_uuid[np.random.randint(0, 2400)])
-        product_group.append("ReferenceProduct")
-        product_name.append(raw_data.waste_product_name[np.random.randint(0, 220)])
-        unit.append("kg")
-        value.append(np.random.randint(100, 1000))
+            for i in range(length):
+                activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                activity_name.append(raw_data.waste_activity_name[np.random.randint(0, 520)])
+                store_id.append(np.random.randint(1, 50))
+                geography.append(raw_data.waste_geography[np.random.randint(0, 40)])
+                special_activity_type.append("ordinary transforming activity")
+                sector.append("Waste Treatment & Recycling")
+                isic_classification.append(raw_data.waste_isic_classification[np.random.randint(0, 13)])
+                isic_section.append(raw_data.waste_isic_sector[np.random.randint(0, 4)])
+                time_period.append(get_random_date())
+                product_uuid.append(raw_data.purchase_product_uuid[np.random.randint(0, 2400)])
+                product_group.append("ReferenceProduct")
+                product_name.append(raw_data.waste_product_name[np.random.randint(0, 220)])
+                unit.append("kg")
+                value.append(np.random.randint(100, 1000))
 
-    df = create_dataframe(
-        activity_uuid=activity_uuid,
-        activity_name=activity_name,
-        store_id=store_id,
-        geography=geography,
-        special_activity_type=special_activity_type,
-        sector=sector,
-        isic_classification=isic_classification,
-        isic_section=isic_section,
-        time_period=time_period,
-        product_uuid=product_uuid,
-        product_group=product_group,
-        product_name=product_name,
-        unit=unit,
-        value=value
-    )
-
-    df.to_excel(f"./xlsx/{category_name}.xlsx", sheet_name=category_name, index=False)
-    print(f"generate --{category_name}-- random data success!")
-
-
-def generate_travel_employee_commuting(category_name, length):
-    activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
-
-    for i in range(length):
-        activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
-        activity_name.append(raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)])
-        store_id.append(np.random.randint(1, 50))
-        geography.append(raw_data.purchase_geography[np.random.randint(0, 110)])
-        special_activity_type.append("ordinary transforming activity")
-        sector.append("Infrastructure & Machinery")
-        isic_classification.append("5510:Short term accommodation activities")
-        isic_section.append("I - Accommodation and food service activities")
-        time_period.append(get_random_date())
-        product_uuid.append(raw_data.purchase_product_uuid[np.random.randint(0, 2400)])
-        product_group.append("ReferenceProduct")
-        product_name.append(raw_data.travel_accommodation_product_name[np.random.randint(0, 4)])
-        unit.append("RMB")
-        value.append(np.random.randint(100, 999))
-
-    df = create_dataframe(
-        activity_uuid=activity_uuid,
-        activity_name=activity_name,
-        store_id=store_id,
-        geography=geography,
-        special_activity_type=special_activity_type,
-        sector=sector,
-        isic_classification=isic_classification,
-        isic_section=isic_section,
-        time_period=time_period,
-        product_uuid=product_uuid,
-        product_group=product_group,
-        product_name=product_name,
-        unit=unit,
-        value=value
-    )
-
-    df.to_excel(f"./xlsx/{category_name}.xlsx", sheet_name=category_name, index=False)
-    print(f"generate --{category_name}-- random data success!")
+            df = create_dataframe(
+                activity_uuid=activity_uuid,
+                activity_name=activity_name,
+                store_id=store_id,
+                geography=geography,
+                special_activity_type=special_activity_type,
+                sector=sector,
+                isic_classification=isic_classification,
+                isic_section=isic_section,
+                time_period=time_period,
+                product_uuid=product_uuid,
+                product_group=product_group,
+                product_name=product_name,
+                unit=unit,
+                value=value
+            )
+            df.to_excel(xlsx, sheet_name=sheet, index=False)
+            print(f"generate --{category_name}-- --{sheet}-- random data success!")
 
 
-def generate_travel_business_travel(category_name, length):
-    activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
+def generate_travel_employee_commuting(category_name, sheet_list, length):
+    print(f"----> start to generate --{category_name}-- data...")
+    with pd.ExcelWriter(f"./xlsx/{category_name}.xlsx") as xlsx:
+        for sheet in sheet_list:
+            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
-    for i in range(length):
-        activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
-        activity_name.append(raw_data.travel_transport_activity_name[np.random.randint(0, 17)])
-        store_id.append(np.random.randint(1, 50))
-        geography.append(raw_data.travel_transport_geography[np.random.randint(0, 7)])
-        special_activity_type.append("ordinary transforming activity")
-        sector.append("Transport")
-        isic_classification.append(raw_data.travel_transport_isic_classification[np.random.randint(0, 4)])
-        isic_section.append("H - Transportation and storage")
-        time_period.append(get_random_date())
-        product_uuid.append(raw_data.purchase_product_uuid[np.random.randint(0, 2400)])
-        product_group.append("ReferenceProduct")
-        product_name.append(raw_data.travel_transport_product_name[np.random.randint(0, 13)])
-        unit.append("person*km")
-        value.append(np.random.randint(100, 999))
+            for i in range(length):
+                activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                activity_name.append(raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)])
+                store_id.append(np.random.randint(1, 50))
+                geography.append(raw_data.purchase_geography[np.random.randint(0, 110)])
+                special_activity_type.append("ordinary transforming activity")
+                sector.append("Infrastructure & Machinery")
+                isic_classification.append("5510:Short term accommodation activities")
+                isic_section.append("I - Accommodation and food service activities")
+                time_period.append(get_random_date())
+                product_uuid.append(raw_data.purchase_product_uuid[np.random.randint(0, 2400)])
+                product_group.append("ReferenceProduct")
+                product_name.append(raw_data.travel_accommodation_product_name[np.random.randint(0, 4)])
+                unit.append("RMB")
+                value.append(np.random.randint(100, 999))
 
-    df = create_dataframe(
-            activity_uuid=activity_uuid,
-            activity_name=activity_name,
-            store_id=store_id,
-            geography=geography,
-            special_activity_type=special_activity_type,
-            sector=sector,
-            isic_classification=isic_classification,
-            isic_section=isic_section,
-            time_period=time_period,
-            product_uuid=product_uuid,
-            product_group=product_group,
-            product_name=product_name,
-            unit=unit,
-            value=value
-        )
+            df = create_dataframe(
+                activity_uuid=activity_uuid,
+                activity_name=activity_name,
+                store_id=store_id,
+                geography=geography,
+                special_activity_type=special_activity_type,
+                sector=sector,
+                isic_classification=isic_classification,
+                isic_section=isic_section,
+                time_period=time_period,
+                product_uuid=product_uuid,
+                product_group=product_group,
+                product_name=product_name,
+                unit=unit,
+                value=value
+            )
+            df.to_excel(xlsx, sheet_name=sheet, index=False)
+            print(f"generate --{category_name}-- --{sheet}-- random data success!")
 
-    df.to_excel(f"./xlsx/{category_name}.xlsx", sheet_name=category_name, index=False)
-    print(f"generate --{category_name}-- random data success!")
+
+def generate_travel_business_travel(category_name, sheet_list, length):
+    print(f"----> start to generate --{category_name}-- data...")
+    with pd.ExcelWriter(f"./xlsx/{category_name}.xlsx") as xlsx:
+        for sheet in sheet_list:
+            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, product_uuid, product_group, product_name, unit, value = [], [], [], [], [], [], [], [], [], [], [], [], [], []
+
+            for i in range(length):
+                activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                activity_name.append(raw_data.travel_transport_activity_name[np.random.randint(0, 17)])
+                store_id.append(np.random.randint(1, 50))
+                geography.append(raw_data.travel_transport_geography[np.random.randint(0, 7)])
+                special_activity_type.append("ordinary transforming activity")
+                sector.append("Transport")
+                isic_classification.append(raw_data.travel_transport_isic_classification[np.random.randint(0, 4)])
+                isic_section.append("H - Transportation and storage")
+                time_period.append(get_random_date())
+                product_uuid.append(raw_data.purchase_product_uuid[np.random.randint(0, 2400)])
+                product_group.append("ReferenceProduct")
+                product_name.append(raw_data.travel_transport_product_name[np.random.randint(0, 13)])
+                unit.append("person*km")
+                value.append(np.random.randint(100, 999))
+
+            df = create_dataframe(
+                    activity_uuid=activity_uuid,
+                    activity_name=activity_name,
+                    store_id=store_id,
+                    geography=geography,
+                    special_activity_type=special_activity_type,
+                    sector=sector,
+                    isic_classification=isic_classification,
+                    isic_section=isic_section,
+                    time_period=time_period,
+                    product_uuid=product_uuid,
+                    product_group=product_group,
+                    product_name=product_name,
+                    unit=unit,
+                    value=value
+                )
+            df.to_excel(xlsx, sheet_name=sheet, index=False)
+            print(f"generate --{category_name}-- --{sheet}-- random data success!")
 
 
 def generate_scope1(category_name, length):
@@ -423,15 +425,36 @@ def generate_random_data():
     data_quantity = np.random.randint(800, 1000)
 
     # generate_purchases("purchases", data_quantity)
-    generate_logistics("logistics", data_quantity)
-    # generate_waste("waste", data_quantity)
-    # generate_travel_business_travel("travel_businessTravel", data_quantity)
-    # generate_travel_employee_commuting("travel_employeeCommuting", data_quantity)
+
+    # logistics_transportation_list activity list
+    logistics_transportation_list = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_air", "distanceBased_road", "distanceBased_sea", "moneyBased_amount"]
+    generate_logistics("logistics_transportation", logistics_transportation_list, data_quantity)
+
+    # logistics_distribution activity list
+    logistics_distribution = ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant", "siteSpecific_space"]
+    generate_logistics("logistics_distribution", logistics_distribution, data_quantity)
+
+    # waste_end_lift activity list
+    waste_end_lift = ["typeSepecific_incinerated", "typeSepecific_recycled", "typeSepecific_landfilled"]
+    generate_waste("waste_endLift", waste_end_lift, data_quantity)
+
+    # waste_operation_list activity list
+    waste_operation_list = ["supplierSpecific", "typeSepecific_incinerated", "typeSepecific_recycled", "typeSepecific_landfilled"]
+    generate_waste("waste_operation", waste_operation_list, data_quantity)
+
+    # travel_business_travel activity list
+    travel_business_travel = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_air", "distanceBased_road", "distanceBased_accomodation", "moneyBased_ammount"]
+    generate_travel_business_travel("travel_businessTravel", travel_business_travel, data_quantity)
+
+    travel_employee_commuting = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_road"]
+    generate_travel_employee_commuting("travel_employeeCommuting", travel_employee_commuting, data_quantity)
+
+
     # generate_scope1("scope1", data_quantity)
     # generate_scope2("scope2", data_quantity)
 
 
-def upload_file():
+def upload_files():
     access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'LTAI5tAG24AcqCYzPvvw4ig8')
     access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'BWZCSGdF3XUeZh50knJap1t6BZ7GiQ')
     bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
@@ -442,12 +465,12 @@ def upload_file():
 
     now = datetime.datetime.now()
     today = now.strftime("%Y-%m-%d")
-    csvs = [csv for csv in os.listdir("./csv") if "csv" in csv]
-    for csv in csvs:
-        result = oss2.resumable_upload(bucket, f"input/{today}/{csv}", f"./csv/{csv}")
-        print(f"{csv} ---> upload status: {result.status}")
+    xlsxs = [xlsx for xlsx in os.listdir("./xlsx") if "xlsx" in xlsx]
+    for xlsx in xlsxs:
+        result = oss2.resumable_upload(bucket, f"input/{today}/{xlsx}", f"./xlsx/{xlsx}")
+        print(f"{xlsx} ---> upload status: {result.status}")
 
 
 if __name__ == '__main__':
     generate_random_data()
-    # upload_file()
+    upload_files()
