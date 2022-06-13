@@ -6,7 +6,6 @@ import raw_data
 import oss2
 import os
 import datetime
-from time import strftime
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -39,8 +38,8 @@ def create_dataframe(activity_uuid=[],
                      value=[]):
     data = {}
 
-    if len(activity_uuid) > 0:
-        data["Activity_UUID"] = activity_uuid
+    # if len(activity_uuid) > 0:
+    #     data["Activity_UUID"] = activity_uuid
 
     if len(activity_name) > 0:
         data["Activity_Name"] = activity_name
@@ -448,7 +447,6 @@ def generate_random_data():
 
     travel_employee_commuting = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_road"]
     generate_travel_employee_commuting("travel_employeeCommuting", travel_employee_commuting, data_quantity)
-
 
     # generate_scope1("scope1", data_quantity)
     # generate_scope2("scope2", data_quantity)
