@@ -10,12 +10,14 @@ from enum import Enum
 
 
 class Category(Enum):
-    logistics_transportation = "logistics_transportation"
-    logistics_distribution = "logistics_distribution"
-    waste_end_lift = "waste_endLift"
+    logistics_transportation = "logi_transportation"
+    logistics_distribution = "logi_distribution"
+    waste_end_life = "waste_endLife"
     waste_operation = "waste_operation"
     travel_business_travel = "travel_businessTravel"
     travel_employee_commuting = "travel_employeeCommuting"
+    scope1 = "scope1_scope1"
+    scope2 = "scope2_scope2"
 
 
 def get_random_date():
@@ -27,6 +29,10 @@ def get_random_date():
     date_touple = time.localtime(t)
     r_date = time.strftime("%Y%m%d", date_touple)
     return r_date
+
+
+def get_random_data_quantity():
+    return np.random.randint(200, 300)
 
 
 def create_dataframe(activity_uuid=[], activity_name=[], store_id=[], geography=[], special_activity_type=[], sector=[], isic_classification=[], isic_section=[], time_period=[], scope=[], product_uuid=[], product_group=[], product_name=[], unit=[], values=[], value_names=[]):
@@ -86,7 +92,7 @@ def create_dataframe(activity_uuid=[], activity_name=[], store_id=[], geography=
     return pd.DataFrame(data)
 
 
-def generate_specific_template_data(category_name, sheet_list, value_names, unit_list, length):
+def generate_specific_template_data(category_name, sheet_list, value_names, unit_list):
     print(f"----> start to generate --{category_name.value}-- data...")
     with pd.ExcelWriter(f"./xlsx/{category_name.value}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
@@ -95,7 +101,7 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
 
             if category_name is Category.logistics_distribution \
                     or category_name is Category.logistics_transportation:
-                for i in range(length):
+                for i in range(get_random_data_quantity()):
                     activity_uuid.append(raw_data.logistics_activity_uuid[np.random.randint(0, 220)])
                     activity_name.append(raw_data.logistics_activity_name[np.random.randint(0, 120)])
                     store_id.append(np.random.randint(1, 50))
@@ -110,11 +116,15 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
                     product_group.append("ReferenceProduct")
                     product_name.append(raw_data.purchase_product_name[np.random.randint(0, 98)])
                     unit.append(unit_value)
-                    value1.append(np.random.randint(100, 10000))
-                    value2.append(np.random.randint(100, 1000))
+                    if "Distance*Weight" in value_name or "Weight*Distance" in value_name:
+                        value1.append(np.random.randint(20, 50))
+                        value2.append(np.random.randint(20, 50))
+                    else:
+                        value1.append(np.random.randint(1000, 10000))
+                        value2.append(np.random.randint(1000, 10000))
 
             elif category_name is Category.travel_business_travel:
-                for i in range(length):
+                for i in range(get_random_data_quantity()):
                     activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
                     activity_name.append(raw_data.travel_transport_activity_name[np.random.randint(0, 17)])
                     store_id.append(np.random.randint(1, 50))
@@ -133,12 +143,15 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
                     if "Nights" in value_name:
                         value1.append(np.random.randint(1, 10))
                         value2.append(np.random.randint(1, 10))
+                    elif "Distance*Weight" in value_name or "Weight*Distance" in value_name:
+                        value1.append(np.random.randint(20, 50))
+                        value2.append(np.random.randint(20, 50))
                     else:
                         value1.append(np.random.randint(100, 999))
                         value2.append(np.random.randint(100, 999))
 
             elif category_name is Category.travel_employee_commuting:
-                for i in range(length):
+                for i in range(get_random_data_quantity()):
                     activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
                     activity_name.append(raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)])
                     store_id.append(np.random.randint(1, 50))
@@ -156,8 +169,8 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
                     value1.append(np.random.randint(100, 999))
                     value2.append(np.random.randint(100, 999))
 
-            elif category_name is Category.waste_operation or category_name is Category.waste_end_lift:
-                for i in range(length):
+            elif category_name is Category.waste_operation or category_name is Category.waste_end_life:
+                for i in range(get_random_data_quantity()):
                     activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
                     activity_name.append(raw_data.waste_activity_name[np.random.randint(0, 520)])
                     store_id.append(np.random.randint(1, 50))
@@ -172,8 +185,38 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
                     product_group.append("ReferenceProduct")
                     product_name.append(raw_data.waste_product_name[np.random.randint(0, 220)])
                     unit.append(unit_value)
-                    value1.append(np.random.randint(100, 1000))
-                    value2.append(np.random.randint(100, 1000))
+                    value1.append(np.random.randint(1000, 10000))
+                    value2.append(np.random.randint(1000, 10000))
+
+            elif category_name is Category.scope1:
+                for i in range(get_random_data_quantity()):
+                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_name.append(raw_data.scope1_activity_name[np.random.randint(0, 176)])
+                    store_id.append(np.random.randint(1, 50))
+                    geography.append(raw_data.scope1_geography[np.random.randint(0, 230)])
+                    special_activity_type.append("ordinary transforming activity")
+                    sector.append("Transport")
+                    isic_classification.append(raw_data.scope1_isic_classification[np.random.randint(0, 3)])
+                    isic_section.append("D - Electricity; gas; steam and air conditioning supply")
+                    time_period.append(get_random_date())
+                    scope.append("scope1")
+                    unit.append(unit_value)
+                    value1.append(np.random.randint(1000, 9999))
+
+            elif category_name is Category.scope2:
+                for i in range(get_random_data_quantity() + 800):
+                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
+                    store_id.append(np.random.randint(1, 50))
+                    geography.append(raw_data.scope2_geography[np.random.randint(0, 170)])
+                    special_activity_type.append("market activity")
+                    sector.append("Electricity")
+                    isic_classification.append(raw_data.scope1_isic_classification[np.random.randint(0, 3)])
+                    isic_section.append("D - Electricity; gas; steam and air conditioning supply")
+                    time_period.append(get_random_date())
+                    scope.append("scope2")
+                    unit.append(unit_value)
+                    value1.append(np.random.randint(1000, 9999))
             else:
                 print("-------- enum mapping error --------")
 
@@ -248,58 +291,51 @@ def sector_mapping(raw_sectors):
 
 
 def generate_random_data():
-    data_quantity = np.random.randint(800, 1000)
-
     # logistics_transportation activity list
-    logistics_transportation = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_air", "distanceBased_road", "distanceBased_sea", "moneyBased_amount"]
+    logistics_transportation = ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air", "distancebased_road", "distancebased_sea", "moneybased_amount"]
     logistics_transportation_value_names = ["Fuel", "Electricity", "Refrigerant", "Weight*Distance", "Weight*Distance", "Weight*Distance", "Amount"]
     logistics_transportation_unit = ["kg", "kWh", "kg", "tonne-km", "tonne-km", "tonne-km", "CNY"]
     generate_specific_template_data(Category.logistics_transportation,
                                     logistics_transportation,
                                     logistics_transportation_value_names,
-                                    logistics_transportation_unit,
-                                    data_quantity)
+                                    logistics_transportation_unit)
 
     # logistics_distribution activity list
-    logistics_distribution = ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
-                              "siteSpecific_space"]
-    logistics_distribution_value_names = ["Fuel", "Electricity", "Refrigerant", "Square"]
-    logistics_distribution_unit = ["kg", "kWh", "kg", "m3"]
-    generate_specific_template_data(Category.logistics_distribution,
-                                    logistics_distribution,
-                                    logistics_distribution_value_names,
-                                    logistics_distribution_unit,
-                                    data_quantity)
+    # logistics_distribution = ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
+    #                           "siteSpecific_space"]
+    # logistics_distribution_value_names = ["Fuel", "Electricity", "Refrigerant", "Square"]
+    # logistics_distribution_unit = ["kg", "kWh", "kg", "m3"]
+    # generate_specific_template_data(Category.logistics_distribution,
+    #                                 logistics_distribution,
+    #                                 logistics_distribution_value_names,
+    #                                 logistics_distribution_unit)
 
-    # waste_end_lift activity list
-    waste_end_lift = ["typeSepecific_incinerated", "typeSepecific_recycled", "typeSepecific_landfilled"]
-    waste_end_lift_value_names = ["Weight", "Weight", "Weight"]
-    waste_end_lift_unit = ["kg", "kg", "kg"]
-    generate_specific_template_data(Category.waste_end_lift,
-                                    waste_end_lift,
-                                    waste_end_lift_value_names,
-                                    waste_end_lift_unit,
-                                    data_quantity)
+    # waste_end_life activity list
+    waste_end_life = ["typespecific_incinerated", "typespecific_recycled", "typespecific_landfilled"]
+    waste_end_life_value_names = ["Weight", "Weight", "Weight"]
+    waste_end_life_unit = ["kg", "kg", "kg"]
+    generate_specific_template_data(Category.waste_end_life,
+                                    waste_end_life,
+                                    waste_end_life_value_names,
+                                    waste_end_life_unit)
 
     # waste_operation activity list
-    waste_operation = ["typeSepecific_incinerated", "typeSepecific_recycled", "typeSepecific_landfilled"]
+    waste_operation = ["typespecific_incinerated", "typespecific_recycled", "typespecific_landfilled"]
     waste_operationt_value_names = ["Weight", "Weight", "Weight"]
     waste_operation_unit = ["kg", "kg", "kg"]
     generate_specific_template_data(Category.waste_operation,
                                     waste_operation,
                                     waste_operationt_value_names,
-                                    waste_operation_unit,
-                                    data_quantity)
+                                    waste_operation_unit)
 
     # travel_business_travel activity list
-    travel_business_travel = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_air", "distanceBased_road", "distanceBased_accomodation", "moneyBased_ammount"]
-    travel_business_travel_value_names = ["Fuel", "Electricity", "Refrigerant", "Distance", "Distance", "Nights", "Counts*Nights"]
-    travel_business_travel_unit = ["kg", "kWh", "kg", "km", "km", "night", "person-night"]
+    travel_business_travel = ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air", "distancebased_road", "distancebased_accommodation", "moneybased_amount"]
+    travel_business_travel_value_names = ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight", "Count*Nights", "Amount"]
+    travel_business_travel_unit = ["kg", "kWh", "kg", "tonne-km", "tonne-km", "person-night", "CNY"]
     generate_specific_template_data(Category.travel_business_travel,
                                     travel_business_travel,
                                     travel_business_travel_value_names,
-                                    travel_business_travel_unit,
-                                    data_quantity)
+                                    travel_business_travel_unit)
 
     travel_employee_commuting = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant",
                                  "distanceBased_road"]
@@ -308,12 +344,25 @@ def generate_random_data():
     generate_specific_template_data(Category.travel_employee_commuting,
                                     travel_employee_commuting,
                                     travel_employee_commuting_value_names,
-                                    travel_employee_commuting_unit,
-                                    data_quantity)
+                                    travel_employee_commuting_unit)
+
+    scope1 = ["owned_building_fuel", "owned_building_refrigerant", "owned_vehicle_fuel", "owned_vehicle_refrigerant"]
+    scope1_value_names = ["Fuel", "Refrigerant", "Fuel", "Refrigerant"]
+    scope1_unit = ["kg", "kg", "kg", "kg"]
+    generate_specific_template_data(Category.scope1,
+                                    scope1,
+                                    scope1_value_names,
+                                    scope1_unit)
+
+    scope2 = ["electricity_with_eac"]
+    scope2_value_names = ["Electricity"]
+    scope2_unit = ["kWh"]
+    generate_specific_template_data(Category.scope2,
+                                    scope2,
+                                    scope2_value_names,
+                                    scope2_unit)
 
     # generate_purchases("purchases", data_quantity)
-    # generate_scope1("scope1", data_quantity)
-    # generate_scope2("scope2", data_quantity)
 
 
 def upload_files():
@@ -327,12 +376,12 @@ def upload_files():
 
     now = datetime.datetime.now()
     today = now.strftime("%Y-%m-%d")
-    xlsxs = [xlsx for xlsx in os.listdir("./xlsx") if "xlsx" in xlsx]
-    for xlsx in xlsxs:
+    xlsx_list = [xlsx for xlsx in os.listdir("./xlsx") if "xlsx" in xlsx and "~$" not in xlsx]
+    for xlsx in xlsx_list:
         result = oss2.resumable_upload(bucket, f"input/{today}/{xlsx}", f"./xlsx/{xlsx}")
         print(f"{xlsx} ---> upload status: {result.status}")
 
 
 if __name__ == '__main__':
     generate_random_data()
-    upload_files()
+    # upload_files()

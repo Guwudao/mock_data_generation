@@ -105,4 +105,4 @@ def replace_commas():
 
 excel_name = "ecoinvent mock data 6-7-22 version 2.0.xlsx"
 # replace_commas()
-csv_separation()
+# csv_separation()
