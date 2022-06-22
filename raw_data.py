@@ -93,6 +93,12 @@ scope2_activity_name = ['market for electricity; medium voltage; renewable energ
 # 170
 scope2_geography = ['BO', 'US-PR', 'CD', 'ZM', 'ME', 'IN-Southern grid', 'MU', 'KE', 'US-MRO', 'TH', 'CA-YK', 'MT', 'FR', 'IT', 'TG', 'EC', 'BJ', 'SI', 'MM', 'TR', 'IN-Western grid', 'DZ', 'KW', 'LY', 'EG', 'KG', 'CA-SK', 'CU', 'CR', 'SD', 'MN', 'AO', 'US-WECC', 'AL', 'DO', 'TJ', 'LV', 'CY', 'GH', 'US-TRE', 'GB', 'AM', 'PE', 'MA', 'SE', 'CZ', 'JM', 'HK', 'LK', 'AZ', 'MD', 'PH', 'BA', 'CA-NS', 'OM', 'LU', 'KH', 'HT', 'UY', 'JP', 'TW', 'SV', 'BY', 'SN', 'TZ', 'PK', 'MX', 'NO', 'TM', 'IN-North-eastern grid', 'LT', 'RS', 'CN-SGCC', 'KP', 'MY', 'SA', 'CW', 'CA-NF', 'CA-PE', 'BW', 'CA-BC', 'HU', 'US-NPCC', 'IL', 'BR-South-eastern grid', 'IS', 'CA-QC', 'AU', 'GR', 'GT', 'MZ', 'SK', 'NE', 'ET', 'QA', 'GI', 'CA-MB', 'NL', 'CA-AB', 'CM', 'BR-North-eastern grid', 'VN', 'DK', 'CN-CSG', 'US-SERC', 'TT', 'UZ', 'SG', 'PT', 'CI', 'ZA', 'CA-ON', 'NI', 'HN', 'CO', 'ES', 'CA-NU', 'ER', 'YE', 'BH', 'BN', 'XK', 'NP', 'CG', 'KZ', 'AR', 'SS', 'RU', 'IQ', 'RO', 'CH', 'NZ', 'BR-Northern grid', 'NG', 'IE', 'BE', 'LB', 'GA', 'CL', 'PY', 'BG', 'BR-Mid-western grid', 'VE', 'BD', 'US-RFC', 'PA', 'CA-NT', 'EE', 'FI', 'TN', 'UA', 'IN-Northern grid', 'SY', 'US-ASCC', 'MK', 'IN-Eastern grid', 'PL', 'IR', 'ZW', 'ID', 'HR', 'DE', 'AE', 'GLO', 'JO', 'GE', 'CA-NB', 'US-HICC', 'KR', 'BR-Southern grid', 'AT']
 
+# 30
+ticker = ['FB', 'TCEHY', 'TSM', 'WFC', 'JPM', 'BACHY', 'NVS', 'NVO', 'PFE', 'DIS', 'AMZN', 'MCD', 'BA', 'UNP', 'UPS', 'NESN.VX', 'TM', 'BUD', 'TOT', 'BP', 'SLB', 'NEE',
+          'EDF.PA', 'D', 'BAYGn.DE', 'BBL', 'BASFn.DE', 'CHL', 'T', 'VOD']
+
+# 10
+asset_investment_sector = ['Technology', 'Financials', 'Health Care', 'Consumer Disc', 'Industrials', 'Consumer Staples', 'Energy', 'Utilities', 'Materials', 'Telecom']
 
 # import pandas as pd
 #

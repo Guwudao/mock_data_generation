@@ -18,6 +18,7 @@ class Category(Enum):
     travel_employee_commuting = "travel_employeeCommuting"
     scope1 = "scope1_scope1"
     scope2 = "scope2_scope2"
+    assetsInvestments = "assetsInvestments_investments"
 
 
 def get_random_date():
@@ -35,7 +36,7 @@ def get_random_data_quantity():
     return np.random.randint(200, 300)
 
 
-def create_dataframe(activity_uuid=[], activity_name=[], store_id=[], geography=[], special_activity_type=[], sector=[], isic_classification=[], isic_section=[], time_period=[], scope=[], product_uuid=[], product_group=[], product_name=[], unit=[], values=[], value_names=[]):
+def create_dataframe(activity_uuid=[], activity_name=[], store_id=[], geography=[], special_activity_type=[], sector=[], isic_classification=[], isic_section=[], time_period=[], scope=[], product_uuid=[], product_group=[], product_name=[], unit=[], values=[], value_names=[], tickers=[], ticker_values=[]):
     data = {}
 
     # if len(activity_uuid) > 0:
@@ -86,8 +87,13 @@ def create_dataframe(activity_uuid=[], activity_name=[], store_id=[], geography=
     else:
         names.append(value_names)
 
-    for value, name in zip(values, names):
-        data[name] = value
+    if len(values) == len(names):
+        for value, name in zip(values, names):
+            data[name] = value
+
+    if len(tickers) > 0 and len(tickers) == len(ticker_values):
+        for ticker, value in zip(tickers, ticker_values):
+            data[ticker] = value
 
     return pd.DataFrame(data)
 
@@ -97,7 +103,7 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
     with pd.ExcelWriter(f"./xlsx/{category_name.value}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
 
-            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2 = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
+            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
             if category_name is Category.logistics_distribution \
                     or category_name is Category.logistics_transportation:
@@ -217,6 +223,21 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
                     scope.append("scope2")
                     unit.append(unit_value)
                     value1.append(np.random.randint(1000, 9999))
+
+            elif category_name is Category.assetsInvestments:
+                tickers = value_names
+                ticker_values = unit_list
+                for i in range(1):
+                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
+                    store_id.append(np.random.randint(1, 50))
+                    geography.append(raw_data.scope2_geography[np.random.randint(0, 170)])
+                    special_activity_type.append("market activity")
+                    sector.append(raw_data.asset_investment_sector[np.random.randint(1, 10)])
+                    isic_classification.append(raw_data.scope1_isic_classification[np.random.randint(0, 3)])
+                    isic_section.append("D - Electricity; gas; steam and air conditioning supply")
+                    time_period.append(get_random_date())
+                    scope.append("scope3")
             else:
                 print("-------- enum mapping error --------")
 
@@ -240,7 +261,9 @@ def generate_specific_template_data(category_name, sheet_list, value_names, unit
                 product_name=product_name,
                 unit=unit,
                 values=value_list,
-                value_names=value_name
+                value_names=value_name,
+                tickers=tickers,
+                ticker_values=ticker_values
             )
             df.to_excel(xlsx, sheet_name=sheet, index=False)
             print(f"generate --{category_name.value}-- --{sheet}-- random data success!")
@@ -362,10 +385,22 @@ def generate_random_data():
                                     scope2_value_names,
                                     scope2_unit)
 
+    assets_investments_investments = ["listedEquityCorpBonds_shares"]
+    assets_investments_investments_tickers_names = []
+    assets_investments_investments_tickers_values = []
+    for i in range(np.random.randint(1, 10)):
+        assets_investments_investments_tickers_names.append(raw_data.ticker[np.random.randint(1, 30)])
+        assets_investments_investments_tickers_values.append(np.random.randint(1000, 9999))
+    generate_specific_template_data(Category.assetsInvestments,
+                                    assets_investments_investments,
+                                    assets_investments_investments_tickers_names,
+                                    assets_investments_investments_tickers_values)
+
     # generate_purchases("purchases", data_quantity)
 
 
 def upload_files():
+    print("-" * 30 + "begin to upload files" + "-" * 30)
     access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'LTAI5tAG24AcqCYzPvvw4ig8')
     access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'BWZCSGdF3XUeZh50knJap1t6BZ7GiQ')
     bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
@@ -384,4 +419,4 @@ def upload_files():
 
 if __name__ == '__main__':
     generate_random_data()
-    # upload_files()
+    upload_files()
