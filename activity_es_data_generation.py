@@ -20,5 +20,5 @@ def generate_es_data(data, info):
         }
         actions.append(action)
     print(len(actions))
-    # res, d = helpers.bulk(connect_es(), actions)
+    helpers.bulk(connect_es(), actions)
     print(info)

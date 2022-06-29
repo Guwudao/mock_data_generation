@@ -9,6 +9,7 @@ import datetime
 from enum import Enum
 import json
 from activity_es_data_generation import generate_es_data
+import uuid
 
 
 class Category(Enum):
@@ -105,7 +106,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.logistics_activity_name[np.random.randint(0, 120)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.logistics_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": "H - Transportation and storage",
                     "date_created": get_today(),
@@ -145,7 +146,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.travel_transport_activity_name[np.random.randint(0, 17)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": "H - Transportation and storage",
                     "date_created": get_today(),
@@ -189,7 +190,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": "I - Accommodation and food service activities",
                     "date_created": get_today(),
@@ -211,7 +212,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.waste_activity_name[np.random.randint(0, 520)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": raw_data.waste_isic_sector[np.random.randint(0, 4)],
                     "date_created": get_today(),
@@ -243,7 +244,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.waste_activity_name[np.random.randint(0, 520)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": raw_data.waste_isic_sector[np.random.randint(0, 4)],
                     "date_created": get_today(),
@@ -275,7 +276,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.scope1_activity_name[np.random.randint(0, 176)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": "D - Electricity; gas; steam and air conditioning supply",
                     "date_created": get_today(),
@@ -301,7 +302,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": "D - Electricity; gas; steam and air conditioning supply",
                     "date_created": get_today(),
@@ -327,7 +328,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict = {
                     "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 520)],
                     "store_id": np.random.randint(1, 50),
-                    "id": raw_data.purchase_activity_uuid[np.random.randint(0, 220)],
+                    "id": uuid.uuid4().hex,
                     "activity": category_name.value + "_" + sheet,
                     "isic_section": "D - Electricity; gas; steam and air conditioning supply",
                     "date_created": get_today(),
