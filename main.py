@@ -8,8 +8,9 @@ import os
 import datetime
 from enum import Enum
 import json
-from activity_es_data_generation import generate_es_data
+from activity_es_data_generation import push_es_data
 import uuid
+import configuration
 
 
 class Category(Enum):
@@ -356,11 +357,11 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
 
         # print(json.dumps(source, indent=4))
         # 创建es数据并推送到es服务器
-        info = f"----> push {category_name.value}_{sheet} data to es"
-        generate_es_data(source, info)
+        info = f"----> push -- {category_name.value}_{sheet} -- data to es"
+        push_es_data(source, info)
 
 
-def generate_specific_template_data(category_name, sheet_list, value_names, unit_list):
+def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list):
     print("\n" + f"----> start to generate --{category_name.value}-- data...")
     with pd.ExcelWriter(f"./xlsx/{category_name.value}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
@@ -567,123 +568,107 @@ def sector_mapping(raw_sectors):
     return sectors
 
 
-def generate_random_data():
-    # logistics_transportation activity list
-    logistics_transportation = ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air", "distancebased_road", "distancebased_sea", "moneybased_amount"]  # sheet name / activity name
-    logistics_transportation_value_names = ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight", "Distance*Weight", "Amount"]
-    logistics_transportation_unit = ["kg", "kWh", "kg", "tonne-km", "tonne-km", "tonne-km", "CNY"]
-    generate_specific_template_data(Category.logistics_transportation,
-                                    logistics_transportation,
-                                    logistics_transportation_value_names,
-                                    logistics_transportation_unit)
-    generate_specific_es_data(Category.logistics_transportation,
-                              logistics_transportation,
-                              logistics_transportation_value_names,
-                              logistics_transportation_unit)
+def generate_oss_data():
+    # logistics_transportation
+    generate_specific_oss_data(Category.logistics_transportation,
+                               configuration.logistics_transportation_activity,
+                               configuration.logistics_transportation_value_names,
+                               configuration.logistics_transportation_unit)
 
     # logistics_distribution activity list
-    # logistics_distribution = ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
-    #                           "siteSpecific_space"]
-    # logistics_distribution_value_names = ["Fuel", "Electricity", "Refrigerant", "Square"]
-    # logistics_distribution_unit = ["kg", "kWh", "kg", "m3"]
     # generate_specific_template_data(Category.logistics_distribution,
     #                                 logistics_distribution,
     #                                 logistics_distribution_value_names,
     #                                 logistics_distribution_unit)
 
-    # waste_end_life activity list
-    waste_end_life = ["typespecific_incinerated", "typespecific_recycled",
-                      "typespecific_landfilled"]  # sheet name / activity name
-    waste_end_life_value_names = ["Weight", "Weight", "Weight"]
-    waste_end_life_unit = ["kg", "kg", "kg"]
-    generate_specific_template_data(Category.waste_end_life,
-                                    waste_end_life,
-                                    waste_end_life_value_names,
-                                    waste_end_life_unit)
-    generate_specific_es_data(Category.waste_end_life,
-                              waste_end_life,
-                              waste_end_life_value_names,
-                              waste_end_life_unit)
+    # waste_end_life
+    generate_specific_oss_data(Category.waste_end_life,
+                               configuration.waste_end_life_activity,
+                               configuration.waste_end_life_value_names,
+                               configuration.waste_end_life_unit)
 
-    # waste_operation activity list
-    waste_operation = ["typespecific_incinerated", "typespecific_recycled",
-                       "typespecific_landfilled"]  # sheet name / activity name
-    waste_operationt_value_names = ["Weight", "Weight", "Weight"]
-    waste_operation_unit = ["kg", "kg", "kg"]
-    generate_specific_template_data(Category.waste_operation,
-                                    waste_operation,
-                                    waste_operationt_value_names,
-                                    waste_operation_unit)
-    generate_specific_es_data(Category.waste_operation,
-                              waste_operation,
-                              waste_operationt_value_names,
-                              waste_operation_unit)
+    # waste_operation
+    generate_specific_oss_data(Category.waste_operation,
+                               configuration.waste_operation_activity,
+                               configuration.waste_operationt_value_names,
+                               configuration.waste_operation_unit)
 
-    # travel_business_travel activity list
-    travel_business_travel = ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air",
-                              "distancebased_road", "distancebased_accommodation",
-                              "moneybased_amount"]  # sheet name / activity name
-    travel_business_travel_value_names = ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight", "Count*Nights", "Amount"]
-    travel_business_travel_unit = ["kg", "kWh", "kg", "tonne-km", "tonne-km", "person-night", "CNY"]
-    generate_specific_template_data(Category.travel_business_travel,
-                                    travel_business_travel,
-                                    travel_business_travel_value_names,
-                                    travel_business_travel_unit)
-    generate_specific_es_data(Category.travel_business_travel,
-                              travel_business_travel,
-                              travel_business_travel_value_names,
-                              travel_business_travel_unit)
+    # travel_business_travel
+    generate_specific_oss_data(Category.travel_business_travel,
+                               configuration.travel_business_travel_activity,
+                               configuration.travel_business_travel_value_names,
+                               configuration.travel_business_travel_unit)
 
-    travel_employee_commuting = ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant",
-                                 "distanceBased_road"]  # sheet name / activity name
-    travel_employee_commuting_value_names = ["Fuel", "Electricity", "Refrigerant", "Distance"]
-    travel_employee_commuting_unit = ["kg", "kWh", "kg", "km"]
-    generate_specific_template_data(Category.travel_employee_commuting,
-                                    travel_employee_commuting,
-                                    travel_employee_commuting_value_names,
-                                    travel_employee_commuting_unit)
-    generate_specific_es_data(Category.travel_employee_commuting,
-                              travel_employee_commuting,
-                              travel_employee_commuting_value_names,
-                              travel_employee_commuting_unit)
+    # travel_employee_commuting
+    generate_specific_oss_data(Category.travel_employee_commuting,
+                               configuration.travel_employee_commuting_activity,
+                               configuration.travel_employee_commuting_value_names,
+                               configuration.travel_employee_commuting_unit)
 
-    scope1 = ["owned_building_fuel", "owned_building_refrigerant", "owned_vehicle_fuel",
-              "owned_vehicle_refrigerant"]  # sheet name / activity name
-    scope1_value_names = ["Fuel", "Refrigerant", "Fuel", "Refrigerant"]
-    scope1_unit = ["kg", "kg", "kg", "kg"]
-    generate_specific_template_data(Category.scope1,
-                                    scope1,
-                                    scope1_value_names,
-                                    scope1_unit)
-    generate_specific_es_data(Category.scope1,
-                              scope1,
-                              scope1_value_names,
-                              scope1_unit)
+    # scope1
+    generate_specific_oss_data(Category.scope1,
+                               configuration.scope1_activity,
+                               configuration.scope1_value_names,
+                               configuration.scope1_unit)
 
-    scope2 = ["electricity_with_eac"]  # sheet name / activity name
-    scope2_value_names = ["Electricity"]
-    scope2_unit = ["kWh"]
-    generate_specific_template_data(Category.scope2,
-                                    scope2,
-                                    scope2_value_names,
-                                    scope2_unit)
-    generate_specific_es_data(Category.scope2,
-                              scope2,
-                              scope2_value_names,
-                              scope2_unit)
+    # scope2
+    generate_specific_oss_data(Category.scope2,
+                               configuration.scope2_activity,
+                               configuration.scope2_value_names,
+                               configuration.scope2_unit)
 
-    assets_investments_investments = ["listedEquityCorpBonds_shares"]  # sheet name / activity name
-    assets_investments_investments_tickers_names = ["Unit"]
-    assets_investments_investments_tickers_values = ["kg"]
+    # assets_investments_investments
     for i in range(np.random.randint(8, 12)):
-        assets_investments_investments_tickers_names.append(raw_data.ticker[np.random.randint(1, 30)])
-        assets_investments_investments_tickers_values.append(np.random.randint(1000, 9999))
-    generate_specific_template_data(Category.assetsInvestments,
-                                    assets_investments_investments,
-                                    assets_investments_investments_tickers_names,
-                                    assets_investments_investments_tickers_values)
+        configuration.assets_investments_investments_tickers_names.append(raw_data.ticker[np.random.randint(1, 30)])
+        configuration.assets_investments_investments_tickers_values.append(np.random.randint(1000, 9999))
+    generate_specific_oss_data(Category.assetsInvestments,
+                               configuration.assets_investments_investments_activity,
+                               configuration.assets_investments_investments_tickers_names,
+                               configuration.assets_investments_investments_tickers_values)
 
-    # generate_purchases("purchases", data_quantity)
+
+def generate_es_data():
+    # logistics_transportation
+    generate_specific_es_data(Category.logistics_transportation,
+                              configuration.logistics_transportation_activity,
+                              configuration.logistics_transportation_value_names,
+                              configuration.logistics_transportation_unit)
+
+    # waste_end_life
+    generate_specific_es_data(Category.waste_end_life,
+                              configuration.waste_end_life_activity,
+                              configuration.waste_end_life_value_names,
+                              configuration.waste_end_life_unit)
+
+    # waste_operation
+    generate_specific_es_data(Category.waste_operation,
+                              configuration.waste_operation_activity,
+                              configuration.waste_operationt_value_names,
+                              configuration.waste_operation_unit)
+
+    # travel_business_travel
+    generate_specific_es_data(Category.travel_business_travel,
+                              configuration.travel_business_travel_activity,
+                              configuration.travel_business_travel_value_names,
+                              configuration.travel_business_travel_unit)
+
+    # travel_employee_commuting
+    generate_specific_es_data(Category.travel_employee_commuting,
+                              configuration.travel_employee_commuting_activity,
+                              configuration.travel_employee_commuting_value_names,
+                              configuration.travel_employee_commuting_unit)
+
+    # scope1
+    generate_specific_es_data(Category.scope1,
+                              configuration.scope1_activity,
+                              configuration.scope1_value_names,
+                              configuration.scope1_unit)
+
+    # scope2
+    generate_specific_es_data(Category.scope2,
+                              configuration.scope2_activity,
+                              configuration.scope2_value_names,
+                              configuration.scope2_unit)
 
 
 def upload_files_to_oss():
@@ -703,5 +688,6 @@ def upload_files_to_oss():
 
 
 if __name__ == '__main__':
-    generate_random_data()
+    # generate_es_data()
+    generate_oss_data()
     # upload_files_to_oss()

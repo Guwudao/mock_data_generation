@@ -9,7 +9,7 @@ def connect_es():
     return elasticsearch
 
 
-def generate_es_data(data, info):
+def push_es_data(data, info):
     actions = []
     for i in data:
         _id = i["id"]
@@ -19,6 +19,5 @@ def generate_es_data(data, info):
             "_source": i
         }
         actions.append(action)
-    print(len(actions))
     helpers.bulk(connect_es(), actions)
     print(info)
