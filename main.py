@@ -683,11 +683,11 @@ def upload_files_to_oss():
 
     xlsx_list = [xlsx for xlsx in os.listdir("./xlsx") if "xlsx" in xlsx and "~$" not in xlsx]
     for xlsx in xlsx_list:
-        result = oss2.resumable_upload(bucket, f"input/{get_today}/{xlsx}", f"./xlsx/{xlsx}")
+        result = oss2.resumable_upload(bucket, f"input/{get_today()}/{xlsx}", f"./xlsx/{xlsx}")
         print(f"{xlsx} ---> upload status: {result.status}")
 
 
 if __name__ == '__main__':
-    # generate_es_data()
+    generate_es_data()
     generate_oss_data()
-    # upload_files_to_oss()
+    upload_files_to_oss()
