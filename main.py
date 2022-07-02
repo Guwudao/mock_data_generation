@@ -8,7 +8,7 @@ import os
 import datetime
 from enum import Enum
 import json
-from activity_es_data_generation import push_es_data
+from activity_es_data_generation import push_es_data, get_time
 import uuid
 import configuration
 
@@ -100,6 +100,9 @@ def create_dataframe(activity_name=[], store_id=[], geography=[], special_activi
 
 
 def generate_specific_es_data(category_name, sheet_list, value_names, unit_list):
+    if not os.path.exists("json"):
+        os.mkdir("./json")
+
     for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
         source = []
         if category_name is Category.logistics_transportation:
@@ -362,7 +365,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
 
 
 def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list):
-    print("\n" + f"----> start to generate --{category_name.value}-- data...")
+    if not os.path.exists("xlsx"):
+        os.mkdir("./xlsx")
+
+    print("\n" + f"{get_time()} ----> start to generate --{category_name.value}-- data...")
     with pd.ExcelWriter(f"./xlsx/{category_name.value}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
 
@@ -521,7 +527,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                 ticker_values=ticker_values
             )
             df.to_excel(xlsx, sheet_name=sheet, index=False)
-            print(f"generate --{category_name.value}-- --{sheet}-- random data success!")
+            print(f"{get_time()} generate --{category_name.value}-- --{sheet}-- random data success!")
 
 
 # EFDB sector mapping
@@ -672,7 +678,7 @@ def generate_es_data():
 
 
 def upload_files_to_oss():
-    print("\n" + "-" * 30 + " begin to upload files " + "-" * 30)
+    print("\n" + get_time() + "-" * 30 + " begin to upload files " + "-" * 30)
     access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'LTAI5tAG24AcqCYzPvvw4ig8')
     access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'BWZCSGdF3XUeZh50knJap1t6BZ7GiQ')
     bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
@@ -684,7 +690,7 @@ def upload_files_to_oss():
     xlsx_list = [xlsx for xlsx in os.listdir("./xlsx") if "xlsx" in xlsx and "~$" not in xlsx]
     for xlsx in xlsx_list:
         result = oss2.resumable_upload(bucket, f"input/{get_today()}/{xlsx}", f"./xlsx/{xlsx}")
-        print(f"{xlsx} ---> upload status: {result.status}")
+        print(f"{get_time()} {xlsx} ---> upload status: {result.status}")
 
 
 if __name__ == '__main__':

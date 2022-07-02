@@ -1,5 +1,12 @@
 from elasticsearch import helpers
 from elasticsearch import Elasticsearch
+import datetime
+
+
+def get_time():
+    t = datetime.datetime.now()
+    now = t.strftime("%Y-%m-%d %H:%M:%S")
+    return now
 
 
 def connect_es():
@@ -20,4 +27,4 @@ def push_es_data(data, info):
         }
         actions.append(action)
     helpers.bulk(connect_es(), actions)
-    print(info)
+    print(get_time() + " " + info)
