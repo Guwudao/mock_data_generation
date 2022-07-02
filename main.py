@@ -100,8 +100,8 @@ def create_dataframe(activity_name=[], store_id=[], geography=[], special_activi
 
 
 def generate_specific_es_data(category_name, sheet_list, value_names, unit_list):
-    if not os.path.exists("json"):
-        os.mkdir("./json")
+    if not os.path.exists(json_path):
+        os.makedirs(json_path)
 
     for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
         source = []
@@ -355,7 +355,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict["data_fields"] = temp
                 source.append(source_dict)
 
-        with open(f"./json/{category_name.value}_{sheet}.json", "w+") as f:
+        with open(f"{json_path}/{category_name.value}_{sheet}.json", "w+") as f:
             f.write(json.dumps(source, indent=4))
 
         # print(json.dumps(source, indent=4))
@@ -365,11 +365,11 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
 
 
 def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list):
-    if not os.path.exists("xlsx"):
-        os.mkdir("./xlsx")
+    if not os.path.exists(xlsx_path):
+        os.mkdir(xlsx_path)
 
     print("\n" + f"{get_time()} ----> start to generate --{category_name.value}-- data...")
-    with pd.ExcelWriter(f"./xlsx/{category_name.value}.xlsx") as xlsx:
+    with pd.ExcelWriter(f"{xlsx_path}/{category_name.value}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
 
             activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
@@ -687,13 +687,15 @@ def upload_files_to_oss():
     # 创建Bucket对象，所有Object相关的接口都可以通过Bucket对象来进行
     bucket = oss2.Bucket(oss2.Auth(access_key_id, access_key_secret), endpoint, bucket_name)
 
-    xlsx_list = [xlsx for xlsx in os.listdir("./xlsx") if "xlsx" in xlsx and "~$" not in xlsx]
+    xlsx_list = [xlsx for xlsx in os.listdir(xlsx_path) if "xlsx" in xlsx and "~$" not in xlsx]
     for xlsx in xlsx_list:
-        result = oss2.resumable_upload(bucket, f"input/{get_today()}/{xlsx}", f"./xlsx/{xlsx}")
+        result = oss2.resumable_upload(bucket, f"input/{get_today()}/{xlsx}", f"{xlsx_path}/{xlsx}")
         print(f"{get_time()} {xlsx} ---> upload status: {result.status}")
 
 
 if __name__ == '__main__':
+    json_path = "./data/json"
+    xlsx_path = "./data/xlsx"
     generate_es_data()
     generate_oss_data()
     upload_files_to_oss()
