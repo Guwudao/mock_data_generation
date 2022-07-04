@@ -374,10 +374,10 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
+            activity_uuid.append(uuid.uuid4().hex)
             if category_name is Category.logistics_distribution or category_name is Category.logistics_transportation:
                 for i in range(get_random_data_quantity()):
-
-                    activity_uuid.append(raw_data.logistics_activity_uuid[np.random.randint(0, 220)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.logistics_activity_name[np.random.randint(0, 120)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.logistics_geography[np.random.randint(0, 19)])
@@ -400,7 +400,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             elif category_name is Category.travel_business_travel:
                 for i in range(get_random_data_quantity()):
-                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.travel_transport_activity_name[np.random.randint(0, 17)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.travel_transport_geography[np.random.randint(0, 7)])
@@ -427,7 +427,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             elif category_name is Category.travel_employee_commuting:
                 for i in range(get_random_data_quantity()):
-                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.purchase_geography[np.random.randint(0, 110)])
@@ -443,7 +443,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             elif category_name is Category.waste_operation or category_name is Category.waste_end_life:
                 for i in range(get_random_data_quantity()):
-                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.waste_activity_name[np.random.randint(0, 520)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.waste_geography[np.random.randint(0, 40)])
@@ -459,7 +459,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             elif category_name is Category.scope1:
                 for i in range(get_random_data_quantity()):
-                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.scope1_activity_name[np.random.randint(0, 176)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.scope1_geography[np.random.randint(0, 230)])
@@ -474,7 +474,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             elif category_name is Category.scope2:
                 for i in range(get_random_data_quantity()):
-                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.scope2_geography[np.random.randint(0, 170)])
@@ -491,7 +491,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                 tickers = value_names
                 ticker_values = unit_list
                 for i in range(1):
-                    activity_uuid.append(raw_data.purchase_activity_uuid[np.random.randint(0, 3700)])
+                    activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
                     store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.scope2_geography[np.random.randint(0, 170)])
@@ -574,7 +574,7 @@ def sector_mapping(raw_sectors):
     return sectors
 
 
-def generate_oss_data():
+def generate_oss_data_excel():
     # logistics_transportation
     generate_specific_oss_data(Category.logistics_transportation,
                                configuration.logistics_transportation_activity,
@@ -677,7 +677,7 @@ def generate_es_data():
                               configuration.scope2_unit)
 
 
-def upload_files_to_oss():
+def upload_excels_to_oss():
     print("\n" + get_time() + "-" * 30 + " begin to upload files " + "-" * 30)
     access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'LTAI5tAG24AcqCYzPvvw4ig8')
     access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'BWZCSGdF3XUeZh50knJap1t6BZ7GiQ')
@@ -697,5 +697,7 @@ if __name__ == '__main__':
     json_path = "./data/json"
     xlsx_path = "./data/xlsx"
     generate_es_data()
-    generate_oss_data()
-    upload_files_to_oss()
+
+    generate_oss_data_excel()
+    upload_excels_to_oss()
+
