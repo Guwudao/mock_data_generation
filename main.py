@@ -11,6 +11,7 @@ import json
 from activity_es_data_generation import push_es_data, get_time
 import uuid
 import configuration
+import mysql.connector
 
 
 class Category(Enum):
@@ -27,7 +28,7 @@ class Category(Enum):
 
 def get_random_date():
     start_time = (2016, 1, 1, 0, 0, 0, 0, 0, 0)
-    end_time = (2022, 5, 31, 23, 59, 59, 0, 0, 0)
+    end_time = (2022, 6, 31, 23, 59, 59, 0, 0, 0)
     start = time.mktime(start_time)
     end = time.mktime(end_time)
     t = random.randint(start, end)
@@ -44,7 +45,6 @@ def get_today():
 
 def get_random_data_quantity():
     return np.random.randint(200, 300)
-    # return np.random.randint(1, 3)
 
 
 def create_dataframe(activity_name=[], store_id=[], geography=[], special_activity_type=[], sector=[],
@@ -678,7 +678,7 @@ def generate_es_data():
 
 
 def upload_excels_to_oss():
-    print("\n" + get_time() + "-" * 30 + " begin to upload files " + "-" * 30)
+    print("\n" + get_time() + "-" * 30 + "  begin to upload files " + "-" * 30)
     access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'LTAI5tAG24AcqCYzPvvw4ig8')
     access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'BWZCSGdF3XUeZh50knJap1t6BZ7GiQ')
     bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
@@ -693,11 +693,41 @@ def upload_excels_to_oss():
         print(f"{get_time()} {xlsx} ---> upload status: {result.status}")
 
 
+def mysql_operation():
+    config = {
+        'host': 'localhost',
+        'user': 'root',
+        'password': '1qaz@WSX',
+        'port': 3306,
+        'database': 'jeecg-boot',
+        'charset': 'utf8'
+    }
+    connect = mysql.connector.connect(**config)  # 建立MySQL连接
+    cursor = connect.cursor()  # 获得游标
+
+    table_name_sql = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME LIKE '%t_dws%';"
+    table_names = pd.read_sql(table_name_sql, connect)
+    print(table_names.values.flatten())
+
+    with pd.ExcelWriter("./t_dws.xlsx") as xlsx:
+        for name in table_names.values.flatten():
+            if len(name.split("_")) > 5:
+                continue
+            sql = f"select * from {name}"
+            data = pd.read_sql(sql, connect)
+            data.to_excel(xlsx, sheet_name=name, index=False)
+
+    cursor.close()
+    connect.close()
+
+
 if __name__ == '__main__':
     json_path = "./data/json"
     xlsx_path = "./data/xlsx"
+
     generate_es_data()
 
     generate_oss_data_excel()
     upload_excels_to_oss()
 
+    # mysql_operation()
