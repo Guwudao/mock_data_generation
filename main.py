@@ -12,6 +12,8 @@ from activity_es_data_generation import push_es_data, get_time
 import uuid
 import configuration
 import mysql.connector
+from sqlalchemy import create_engine
+from urllib import parse
 
 
 class Category(Enum):
@@ -694,19 +696,31 @@ def upload_excels_to_oss():
 
 
 def mysql_operation():
-    config = {
-        'host': 'localhost',
-        'user': 'root',
-        'password': '1qaz@WSX',
-        'port': 3306,
-        'database': 'jeecg-boot',
-        'charset': 'utf8'
-    }
-    connect = mysql.connector.connect(**config)  # 建立MySQL连接
-    cursor = connect.cursor()  # 获得游标
+    username = "root"
+    password = "1qaz@WSX"
+    host = "localhost"
+    db = "jeecg-boot"
 
-    table_name_sql = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME LIKE '%t_dws%';"
-    table_names = pd.read_sql(table_name_sql, connect)
+    # mysql package connect
+    # config = {
+    #     'host': host,
+    #     'user': username,
+    #     'password': password,
+    #     'port': 3306,
+    #     'database': db,
+    #     'charset': 'utf8'
+    # }
+    # connect = mysql.connector.connect(**config)  # 建立MySQL连接
+    # cursor = connect.cursor()  # 获得游标
+    # cursor.close()
+    # connect.close()
+
+    # sqlalchemy package connect
+    pwd = parse.quote_plus(password)
+    engine = create_engine(f'mysql+pymysql://{username}:{pwd}@{host}:3306/{db}?charset=utf8')
+
+    table_name_sql = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME LIKE '%%t_dws%%';"
+    table_names = pd.read_sql(table_name_sql, engine)
     print(table_names.values.flatten())
 
     with pd.ExcelWriter("./t_dws.xlsx") as xlsx:
@@ -714,11 +728,8 @@ def mysql_operation():
             if len(name.split("_")) > 5:
                 continue
             sql = f"select * from {name}"
-            data = pd.read_sql(sql, connect)
+            data = pd.read_sql(sql, engine)
             data.to_excel(xlsx, sheet_name=name, index=False)
-
-    cursor.close()
-    connect.close()
 
 
 if __name__ == '__main__':
@@ -726,8 +737,6 @@ if __name__ == '__main__':
     xlsx_path = "./data/xlsx"
 
     generate_es_data()
-
     generate_oss_data_excel()
     upload_excels_to_oss()
-
     # mysql_operation()

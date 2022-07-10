@@ -4,3 +4,4 @@ pandas==1.4.2
 openpyxl==3.0.10
 elasticsearch==8.2.3
 mysql~=0.0.3
+SQLAlchemy~=1.4.39
