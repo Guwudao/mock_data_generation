@@ -211,6 +211,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Infrastructure & Machinery",
                     "time_period": get_random_date()
                 }
+                v1 = np.random.randint(1000, 9999)
+                source_dict["data_fields"] = {
+                    unit_value: v1
+                }
                 source.append(source_dict)
 
         elif category_name is Category.waste_operation:
@@ -737,6 +741,6 @@ if __name__ == '__main__':
     xlsx_path = "./data/xlsx"
 
     generate_es_data()
-    generate_oss_data_excel()
-    upload_excels_to_oss()
+    # generate_oss_data_excel()
+    # upload_excels_to_oss()
     # mysql_operation()
