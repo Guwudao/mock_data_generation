@@ -127,23 +127,15 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Transport",
                     "time_period": get_random_date()
                 }
-
-                if "Distance*Weight" in value_name:
+                if "*" in value_name:
                     # unit为 距离x重量 时value为20-50避免值太大影响图标比例
-                    v1 = np.random.randint(20, 50)
-                    v2 = np.random.randint(20, 50)
+                    source_dict["data_fields"] = {}
+                    for column in value_name.split("*"):
+                        source_dict["data_fields"][column] = value = np.random.randint(20, 50)
                 else:
                     # 其余时候value取值
-                    v1 = np.random.randint(1000, 10000)
-                    v2 = np.random.randint(1000, 10000)
-
-                if "*" in value_name:
                     source_dict["data_fields"] = {
-                        unit_value: v1 * v2
-                    }
-                else:
-                    source_dict["data_fields"] = {
-                        unit_value: v1
+                        value_name: np.random.randint(1000, 9999)
                     }
                 source.append(source_dict)
 
@@ -170,24 +162,19 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
 
                 if "Nights" in value_name:
                     # unit为Nights时value为个位数
-                    v1 = np.random.randint(1, 10)
-                    v2 = np.random.randint(1, 10)
-                elif "Distance*Weight" in value_name:
-                    # unit为 距离x重量 时value为20-50避免值太大影响图标比例
-                    v1 = np.random.randint(20, 50)
-                    v2 = np.random.randint(20, 50)
+                    value = np.random.randint(1, 10)
                 else:
                     # 其余时候value取值
-                    v1 = np.random.randint(100, 999)
-                    v2 = np.random.randint(100, 999)
+                    value = np.random.randint(100, 999)
 
                 if "*" in value_name:
-                    source_dict["data_fields"] = {
-                        unit_value: v1 * v2
-                    }
+                    # unit为 距离x重量 时value为20-50避免值太大影响图标比例
+                    source_dict["data_fields"] = {}
+                    for column in value_name.split("*"):
+                        source_dict["data_fields"][column] = np.random.randint(20, 50)
                 else:
                     source_dict["data_fields"] = {
-                        unit_value: v1
+                        value_name: value
                     }
                 source.append(source_dict)
 
@@ -209,11 +196,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "category": "employeeCommuting",
                     "status": "NEW",
                     "sector": "Infrastructure & Machinery",
-                    "time_period": get_random_date()
-                }
-                v1 = np.random.randint(1000, 9999)
-                source_dict["data_fields"] = {
-                    unit_value: v1
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name: np.random.randint(1000, 9999)
+                    }
                 }
                 source.append(source_dict)
 
@@ -237,15 +223,14 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Waste Treatment & Recycling",
                     "time_period": get_random_date()
                 }
-                v1 = np.random.randint(1000, 10000)
-                v2 = np.random.randint(1000, 10000)
+                value = np.random.randint(1000, 10000)
                 if "*" in value_name:
-                    source_dict["data_fields"] = {
-                        unit_value: v1 * v2
-                    }
+                    source_dict["data_fields"] = {}
+                    for column in value_name.split("*"):
+                        source_dict["data_fields"][column] = value
                 else:
                     source_dict["data_fields"] = {
-                        unit_value: v1
+                        value_name: value
                     }
                 source.append(source_dict)
 
@@ -269,15 +254,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Waste Treatment & Recycling",
                     "time_period": get_random_date()
                 }
-                v1 = np.random.randint(1000, 9999)
-                v2 = np.random.randint(1000, 9999)
                 if "*" in value_name:
-                    source_dict["data_fields"] = {
-                        unit_value: v1 * v2
-                    }
+                    source_dict["data_fields"] = {}
+                    for column in value_name.split("*"):
+                        source_dict["data_fields"][column] = np.random.randint(1000, 9999)
                 else:
                     source_dict["data_fields"] = {
-                        unit_value: v1
+                        value_name: np.random.randint(1000, 9999)
                     }
                 source.append(source_dict)
 
@@ -299,11 +282,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "category": "scope1",
                     "status": "NEW",
                     "sector": "Transport",
-                    "time_period": get_random_date()
-                }
-                v1 = np.random.randint(1000, 9999)
-                source_dict["data_fields"] = {
-                    unit_value: v1
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name: np.random.randint(1000, 9999)
+                    }
                 }
                 source.append(source_dict)
 
@@ -325,11 +307,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "category": "scope2",
                     "status": "NEW",
                     "sector": "Electricity",
-                    "time_period": get_random_date()
-                }
-                v1 = np.random.randint(1000, 9999)
-                source_dict["data_fields"] = {
-                    unit_value: v1
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name: np.random.randint(1000, 9999)
+                    }
                 }
                 source.append(source_dict)
 
