@@ -5,7 +5,7 @@ scope1_value_names = ["Fuel", "Refrigerant", "Fuel", "Refrigerant"]
 scope1_unit = ["kg", "kg", "kg", "kg"]
 
 # scope2
-scope2_activity = ["electricity_with_eac"]
+scope2_activity = ["electricity_without_eac"]
 scope2_value_names = ["Electricity"]
 scope2_unit = ["kWh"]
 
@@ -28,8 +28,7 @@ waste_end_life_value_names = ["Weight", "Weight", "Weight"]
 waste_end_life_unit = ["kg", "kg", "kg"]
 
 # waste_operation
-waste_operation_activity = ["typespecific_incinerated", "typespecific_recycled",
-                   "typespecific_landfilled"]  # sheet name / activity name
+waste_operation_activity = ["typespecific_incinerated", "typespecific_recycled", "typespecific_landfilled"]  # sheet name / activity name
 waste_operationt_value_names = ["Weight", "Weight", "Weight"]
 waste_operation_unit = ["kg", "kg", "kg"]
 

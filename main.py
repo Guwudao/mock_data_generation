@@ -11,7 +11,6 @@ import json
 from activity_es_data_generation import push_es_data, get_time
 import uuid
 import configuration
-import mysql.connector
 from sqlalchemy import create_engine
 from urllib import parse
 
@@ -29,8 +28,9 @@ class Category(Enum):
 
 
 def get_random_date():
+    now = datetime.datetime.now()
     start_time = (2016, 1, 1, 0, 0, 0, 0, 0, 0)
-    end_time = (2022, 6, 31, 23, 59, 59, 0, 0, 0)
+    end_time = (now.year, now.month, now.day-1, 23, 59, 59, 0, 0, 0)
     start = time.mktime(start_time)
     end = time.mktime(end_time)
     t = random.randint(start, end)
@@ -131,11 +131,11 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     # unit为 距离x重量 时value为20-50避免值太大影响图标比例
                     source_dict["data_fields"] = {}
                     for column in value_name.split("*"):
-                        source_dict["data_fields"][column] = value = np.random.randint(20, 50)
+                        source_dict["data_fields"][column.lower()] = np.random.randint(20, 50)
                 else:
                     # 其余时候value取值
                     source_dict["data_fields"] = {
-                        value_name: np.random.randint(1000, 9999)
+                        value_name.lower(): np.random.randint(1000, 9999)
                     }
                 source.append(source_dict)
 
@@ -171,10 +171,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     # unit为 距离x重量 时value为20-50避免值太大影响图标比例
                     source_dict["data_fields"] = {}
                     for column in value_name.split("*"):
-                        source_dict["data_fields"][column] = np.random.randint(20, 50)
+                        source_dict["data_fields"][column.lower()] = np.random.randint(20, 50)
                 else:
                     source_dict["data_fields"] = {
-                        value_name: value
+                        value_name.lower(): value
                     }
                 source.append(source_dict)
 
@@ -198,7 +198,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Infrastructure & Machinery",
                     "time_period": get_random_date(),
                     "data_fields": {
-                        value_name: np.random.randint(1000, 9999)
+                        value_name.lower(): np.random.randint(1000, 9999)
                     }
                 }
                 source.append(source_dict)
@@ -227,10 +227,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 if "*" in value_name:
                     source_dict["data_fields"] = {}
                     for column in value_name.split("*"):
-                        source_dict["data_fields"][column] = value
+                        source_dict["data_fields"][column.lower()] = value
                 else:
                     source_dict["data_fields"] = {
-                        value_name: value
+                        value_name.lower(): value
                     }
                 source.append(source_dict)
 
@@ -257,10 +257,10 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 if "*" in value_name:
                     source_dict["data_fields"] = {}
                     for column in value_name.split("*"):
-                        source_dict["data_fields"][column] = np.random.randint(1000, 9999)
+                        source_dict["data_fields"][column.lower()] = np.random.randint(1000, 9999)
                 else:
                     source_dict["data_fields"] = {
-                        value_name: np.random.randint(1000, 9999)
+                        value_name.lower(): np.random.randint(1000, 9999)
                     }
                 source.append(source_dict)
 
@@ -284,7 +284,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Transport",
                     "time_period": get_random_date(),
                     "data_fields": {
-                        value_name: np.random.randint(1000, 9999)
+                        value_name.lower(): np.random.randint(1000, 9999)
                     }
                 }
                 source.append(source_dict)
@@ -309,7 +309,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Electricity",
                     "time_period": get_random_date(),
                     "data_fields": {
-                        value_name: np.random.randint(1000, 9999)
+                        value_name.lower(): np.random.randint(1000, 9999)
                     }
                 }
                 source.append(source_dict)
@@ -347,15 +347,15 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
 
         # print(json.dumps(source, indent=4))
         # 创建es数据并推送到es服务器
-        info = f"----> push -- {category_name.value}_{sheet} -- data to es"
+        info = f"----> push data to es -- {category_name.value}_{sheet}"
         push_es_data(source, info)
 
 
 def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list):
     if not os.path.exists(xlsx_path):
-        os.mkdir(xlsx_path)
+        os.makedirs(xlsx_path)
 
-    print("\n" + f"{get_time()} ----> start to generate --{category_name.value}-- data...")
+    print("\n" + f"{get_time()} ----> start to generate --{category_name.value}-- mock data...")
     with pd.ExcelWriter(f"{xlsx_path}/{category_name.value}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
 
@@ -514,7 +514,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                 ticker_values=ticker_values
             )
             df.to_excel(xlsx, sheet_name=sheet, index=False)
-            print(f"{get_time()} generate --{category_name.value}-- --{sheet}-- random data success!")
+            print(f"{get_time()} generate random data success! --{category_name.value}-- --{sheet}--")
 
 
 # EFDB sector mapping
@@ -686,20 +686,6 @@ def mysql_operation():
     host = "localhost"
     db = "jeecg-boot"
 
-    # mysql package connect
-    # config = {
-    #     'host': host,
-    #     'user': username,
-    #     'password': password,
-    #     'port': 3306,
-    #     'database': db,
-    #     'charset': 'utf8'
-    # }
-    # connect = mysql.connector.connect(**config)  # 建立MySQL连接
-    # cursor = connect.cursor()  # 获得游标
-    # cursor.close()
-    # connect.close()
-
     # sqlalchemy package connect
     pwd = parse.quote_plus(password)
     engine = create_engine(f'mysql+pymysql://{username}:{pwd}@{host}:3306/{db}?charset=utf8')
@@ -722,6 +708,6 @@ if __name__ == '__main__':
     xlsx_path = "./data/xlsx"
 
     generate_es_data()
-    # generate_oss_data_excel()
-    # upload_excels_to_oss()
+    generate_oss_data_excel()
+    upload_excels_to_oss()
     # mysql_operation()
