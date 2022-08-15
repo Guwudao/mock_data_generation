@@ -1,0 +1,106 @@
+{
+	"mock": [
+		{
+			"pillar":  "scope1",
+			"categories": [
+				{
+					"name": "scope1",
+					"activities": ["owned_building_fuel", "owned_building_refrigerant", "owned_vehicle_fuel", "owned_vehicle_refrigerant"],
+					"value_name": ["Fuel", "Refrigerant", "Fuel", "Refrigerant"],
+					"unit": ["kg", "kg", "kg", "kg"]
+				}
+			]
+		},
+		{
+			"pillar":  "scope2",
+			"categories": [
+				{
+					"name": "scope2",
+					"activities": ["electricity_without_eac"],
+					"value_name": ["Electricity"],
+					"unit": ["kWh"]
+				}
+			]
+		},
+		{
+			"pillar":  "logi",
+			"categories": [
+				{
+					"name": "upstreamTransportation",
+					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air",
+                            "distancebased_road", "distancebased_sea", "moneybased_amount"],
+					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight",
+                                        "Distance*Weight", "Amount"],
+					"unit": ["kg", "kWh", "kg", "tonne-km", "tonne-km", "tonne-km", "CNY"]
+				},
+				{
+					"name": "downstreamTransportation",
+					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air",
+                            "distancebased_road", "distancebased_sea", "moneybased_amount"],
+					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight",
+                                        "Distance*Weight", "Amount"],
+					"unit": ["kg", "kWh", "kg", "tonne-km", "tonne-km", "tonne-km", "CNY"]
+				},
+				{
+					"name": "upstreamDistribution",
+					"activities": ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
+                          "siteSpecific_space"],
+					"value_name": ["Fuel", "Electricity", "Refrigerant", "Square"],
+					"unit": ["kg", "kWh", "kg", "m3"]
+				},
+				{
+					"name": "downstreamDistribution",
+					"activities": ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
+                          "siteSpecific_space"],
+					"value_name": ["Fuel", "Electricity", "Refrigerant", "Square"],
+					"unit": ["kg", "kWh", "kg", "m3"]
+				}
+			]
+		},
+		{
+			"pillar":  "waste",
+			"categories": [
+				{
+					"name": "endLife",
+					"activities": ["typespecific_incinerated", "typespecific_recycled", "typespecific_landfilled"],
+					"value_name": ["Weight", "Weight", "Weight"],
+					"unit": ["kg", "kg", "kg"]
+				},
+				{
+					"name": "operation",
+					"activities": ["typespecific_incinerated", "typespecific_recycled", "typespecific_landfilled"],
+					"value_name": ["Weight", "Weight", "Weight"],
+					"unit": ["kg", "kg", "kg"]
+				}
+			]
+		},
+		{
+			"pillar":  "travel",
+			"categories": [
+				{
+					"name": "businessTravel",
+					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air", "distancebased_road", "distancebased_accommodation", "moneybased_amount"],
+					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance", "Distance", "Count*Nights", "Amount"],
+					"unit": ["kg", "kWh", "kg", "km", "km", "person-night", "CNY"]
+				},
+				{
+					"name": "employeeCommuting",
+					"activities": ["fuelBased_fuel", "fuelBased_electricity", "fuelBased_refrigerant", "distanceBased_road"],
+					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance"],
+					"unit": ["kg", "kWh", "kg", "km"]
+				}
+			]
+		},
+		{
+			"pillar":  "assetsInvestments",
+			"categories": [
+				{
+					"name": "investments",
+					"activities": ["listedEquityCorpBonds_shares"],
+					"value_name": ["Unit"],
+					"unit": ["kg"]
+				}
+			]
+		}
+	]
+}

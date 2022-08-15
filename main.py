@@ -16,8 +16,10 @@ from urllib import parse
 
 
 class Category(Enum):
-    logistics_transportation = "logi_transportation"
-    logistics_distribution = "logi_distribution"
+    logistics_upstream_transportation = "logi_upstreamTransportation"
+    logistics_downstream_transportation = "logi_downstreamTransportation"
+    logistics_upstream_distribution = "logi_upstreamDistribution"
+    logistics_downstream_distribution = "logi_downstreamDistribution"
     waste_end_life = "waste_endLife"
     waste_operation = "waste_operation"
     travel_business_travel = "travel_businessTravel"
@@ -107,13 +109,17 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
 
     for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
         source = []
-        if category_name is Category.logistics_transportation:
+        if category_name in [Category.logistics_upstream_transportation.value,
+                             Category.logistics_downstream_transportation.value,
+                             Category.logistics_upstream_distribution.value,
+                             Category.logistics_downstream_distribution.value]:
+
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.logistics_activity_name[np.random.randint(0, 120)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": "H - Transportation and storage",
                     "date_created": get_today(),
                     "special_activity_type": "ordinary transforming activity",
@@ -139,13 +145,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     }
                 source.append(source_dict)
 
-        elif category_name is Category.travel_business_travel:
+        elif category_name == Category.travel_business_travel.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.travel_transport_activity_name[np.random.randint(0, 17)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": "H - Transportation and storage",
                     "date_created": get_today(),
                     "special_activity_type": "ordinary transforming activity",
@@ -178,13 +184,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     }
                 source.append(source_dict)
 
-        elif category_name is Category.travel_employee_commuting:
+        elif category_name == Category.travel_employee_commuting.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": "I - Accommodation and food service activities",
                     "date_created": get_today(),
                     "special_activity_type": "ordinary transforming activity",
@@ -203,13 +209,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 }
                 source.append(source_dict)
 
-        elif category_name is Category.waste_operation:
+        elif category_name == Category.waste_operation.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.waste_activity_name[np.random.randint(0, 520)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": raw_data.waste_isic_sector[np.random.randint(0, 4)],
                     "date_created": get_today(),
                     "special_activity_type": "ordinary transforming activity",
@@ -234,13 +240,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     }
                 source.append(source_dict)
 
-        elif category_name is Category.waste_end_life:
+        elif category_name == Category.waste_end_life.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.waste_activity_name[np.random.randint(0, 520)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": raw_data.waste_isic_sector[np.random.randint(0, 4)],
                     "date_created": get_today(),
                     "special_activity_type": "ordinary transforming activity",
@@ -264,13 +270,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     }
                 source.append(source_dict)
 
-        elif category_name is Category.scope1:
+        elif category_name == Category.scope1.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.scope1_activity_name[np.random.randint(0, 176)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": "D - Electricity; gas; steam and air conditioning supply",
                     "date_created": get_today(),
                     "special_activity_type": "ordinary transforming activity",
@@ -284,18 +290,27 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "sector": "Transport",
                     "time_period": get_random_date(),
                     "data_fields": {
-                        value_name.lower(): np.random.randint(1000, 9999)
+                        value_name.lower(): np.random.randint(50, 100)
                     }
                 }
+
+                # if sheet == "owned_building_fuel" or sheet == "owned_building_refrigerant":
+                #     source_dict["data_fields"] = {
+                #         value_name.lower(): np.random.randint(50, 100)
+                #     }
+                # else:
+                #     source_dict["data_fields"] = {
+                #         value_name.lower(): np.random.randint(1000, 4999)
+                #     }
                 source.append(source_dict)
 
-        elif category_name is Category.scope2:
+        elif category_name == Category.scope2.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": "D - Electricity; gas; steam and air conditioning supply",
                     "date_created": get_today(),
                     "special_activity_type": "market activity",
@@ -314,13 +329,13 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 }
                 source.append(source_dict)
 
-        elif category_name is Category.assetsInvestments:
+        elif category_name == Category.assetsInvestments.value:
             for i in range(1):
                 source_dict = {
-                    "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 520)],
+                    "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
                     "store_id": np.random.randint(1, 50),
                     "id": uuid.uuid4().hex,
-                    "activity": category_name.value + "_" + sheet,
+                    "activity": category_name + "_" + sheet,
                     "isic_section": "D - Electricity; gas; steam and air conditioning supply",
                     "date_created": get_today(),
                     "special_activity_type": "market activity",
@@ -342,12 +357,12 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 source_dict["data_fields"] = temp
                 source.append(source_dict)
 
-        with open(f"{json_path}/{category_name.value}_{sheet}.json", "w+") as f:
+        with open(f"{json_path}/{category_name}_{sheet}.json", "w+") as f:
             f.write(json.dumps(source, indent=4))
 
         # print(json.dumps(source, indent=4))
         # 创建es数据并推送到es服务器
-        info = f"----> push data to es -- {category_name.value}_{sheet}"
+        info = f"----> push data to es -- {category_name}_{sheet}"
         push_es_data(source, info)
 
 
@@ -355,14 +370,17 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
     if not os.path.exists(xlsx_path):
         os.makedirs(xlsx_path)
 
-    print("\n" + f"{get_time()} ----> start to generate --{category_name.value}-- mock data...")
-    with pd.ExcelWriter(f"{xlsx_path}/{category_name.value}.xlsx") as xlsx:
+    print("\n" + f"{get_time()} ----> start to generate --{category_name}-- mock data...")
+    with pd.ExcelWriter(f"{xlsx_path}/{category_name}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
 
             activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
             activity_uuid.append(uuid.uuid4().hex)
-            if category_name is Category.logistics_distribution or category_name is Category.logistics_transportation:
+            if category_name in [Category.logistics_upstream_transportation.value,
+                                 Category.logistics_downstream_transportation.value,
+                                 Category.logistics_upstream_distribution.value,
+                                 Category.logistics_downstream_distribution.value]:
                 for i in range(get_random_data_quantity()):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.logistics_activity_name[np.random.randint(0, 120)])
@@ -385,7 +403,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                         value1.append(np.random.randint(1000, 10000))
                         value2.append(np.random.randint(1000, 10000))
 
-            elif category_name is Category.travel_business_travel:
+            elif category_name == Category.travel_business_travel.value:
                 for i in range(get_random_data_quantity()):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.travel_transport_activity_name[np.random.randint(0, 17)])
@@ -412,7 +430,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                         value1.append(np.random.randint(100, 999))
                         value2.append(np.random.randint(100, 999))
 
-            elif category_name is Category.travel_employee_commuting:
+            elif category_name == Category.travel_employee_commuting.value:
                 for i in range(get_random_data_quantity()):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)])
@@ -428,7 +446,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                     value1.append(np.random.randint(100, 999))
                     value2.append(np.random.randint(100, 999))
 
-            elif category_name is Category.waste_operation or category_name is Category.waste_end_life:
+            elif category_name == Category.waste_operation.value or category_name == Category.waste_end_life.value:
                 for i in range(get_random_data_quantity()):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.waste_activity_name[np.random.randint(0, 520)])
@@ -444,7 +462,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                     value1.append(np.random.randint(1000, 10000))
                     value2.append(np.random.randint(1000, 10000))
 
-            elif category_name is Category.scope1:
+            elif category_name == Category.scope1.value:
                 for i in range(get_random_data_quantity()):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.scope1_activity_name[np.random.randint(0, 176)])
@@ -459,7 +477,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                     unit.append(unit_value)
                     value1.append(np.random.randint(1000, 9999))
 
-            elif category_name is Category.scope2:
+            elif category_name == Category.scope2.value:
                 for i in range(get_random_data_quantity()):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
@@ -474,7 +492,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                     unit.append(unit_value)
                     value1.append(np.random.randint(1000, 9999))
 
-            elif category_name is Category.assetsInvestments:
+            elif category_name == Category.assetsInvestments.value:
                 tickers = value_names
                 ticker_values = unit_list
                 for i in range(1):
@@ -491,6 +509,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             else:
                 print("-------- enum mapping error --------")
+                continue
 
             # 多unit追加多组数据（目前最多2个unit）
             value_list = [value1]
@@ -514,7 +533,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                 ticker_values=ticker_values
             )
             df.to_excel(xlsx, sheet_name=sheet, index=False)
-            print(f"{get_time()} generate random data success! --{category_name.value}-- --{sheet}--")
+            print(f"{get_time()} generate random data success! --{category_name}-- --{sheet}--")
 
 
 # EFDB sector mapping
@@ -561,107 +580,38 @@ def sector_mapping(raw_sectors):
     return sectors
 
 
-def generate_oss_data_excel():
-    # logistics_transportation
-    generate_specific_oss_data(Category.logistics_transportation,
-                               configuration.logistics_transportation_activity,
-                               configuration.logistics_transportation_value_names,
-                               configuration.logistics_transportation_unit)
+def generate_mock_data():
+    with open("configuration.json", "r", encoding="utf-8") as f:
+        content = json.load(f)
 
-    # logistics_distribution activity list
-    # generate_specific_template_data(Category.logistics_distribution,
-    #                                 logistics_distribution,
-    #                                 logistics_distribution_value_names,
-    #                                 logistics_distribution_unit)
+        for data in content["mock"]:
+            pillar_name = data["pillar"]
+            for category in data["categories"]:
+                # print(pillar_name + "_" + category["name"])
+                file_name = pillar_name + "_" + category["name"]
 
-    # waste_end_life
-    generate_specific_oss_data(Category.waste_end_life,
-                               configuration.waste_end_life_activity,
-                               configuration.waste_end_life_value_names,
-                               configuration.waste_end_life_unit)
+                if file_name == Category.assetsInvestments.value:
+                    # assets_investments_investments
+                    tickers_names, tickers_values = category["value_name"], category["unit"]
+                    for i in range(np.random.randint(8, 12)):
+                        tickers_names.append(raw_data.ticker[np.random.randint(1, 30)])
+                        tickers_values.append(np.random.randint(1000, 9999))
+                    generate_specific_oss_data(file_name,
+                                               category["activities"],
+                                               tickers_names,
+                                               tickers_values)
+                else:
+                    # generate oss xlsx files
+                    generate_specific_oss_data(file_name,
+                                               category["activities"],
+                                               category["value_name"],
+                                               category["unit"])
 
-    # waste_operation
-    generate_specific_oss_data(Category.waste_operation,
-                               configuration.waste_operation_activity,
-                               configuration.waste_operationt_value_names,
-                               configuration.waste_operation_unit)
-
-    # travel_business_travel
-    generate_specific_oss_data(Category.travel_business_travel,
-                               configuration.travel_business_travel_activity,
-                               configuration.travel_business_travel_value_names,
-                               configuration.travel_business_travel_unit)
-
-    # travel_employee_commuting
-    generate_specific_oss_data(Category.travel_employee_commuting,
-                               configuration.travel_employee_commuting_activity,
-                               configuration.travel_employee_commuting_value_names,
-                               configuration.travel_employee_commuting_unit)
-
-    # scope1
-    generate_specific_oss_data(Category.scope1,
-                               configuration.scope1_activity,
-                               configuration.scope1_value_names,
-                               configuration.scope1_unit)
-
-    # scope2
-    generate_specific_oss_data(Category.scope2,
-                               configuration.scope2_activity,
-                               configuration.scope2_value_names,
-                               configuration.scope2_unit)
-
-    # assets_investments_investments
-    for i in range(np.random.randint(8, 12)):
-        configuration.assets_investments_investments_tickers_names.append(raw_data.ticker[np.random.randint(1, 30)])
-        configuration.assets_investments_investments_tickers_values.append(np.random.randint(1000, 9999))
-    generate_specific_oss_data(Category.assetsInvestments,
-                               configuration.assets_investments_investments_activity,
-                               configuration.assets_investments_investments_tickers_names,
-                               configuration.assets_investments_investments_tickers_values)
-
-
-def generate_es_data():
-    # logistics_transportation
-    generate_specific_es_data(Category.logistics_transportation,
-                              configuration.logistics_transportation_activity,
-                              configuration.logistics_transportation_value_names,
-                              configuration.logistics_transportation_unit)
-
-    # waste_end_life
-    generate_specific_es_data(Category.waste_end_life,
-                              configuration.waste_end_life_activity,
-                              configuration.waste_end_life_value_names,
-                              configuration.waste_end_life_unit)
-
-    # waste_operation
-    generate_specific_es_data(Category.waste_operation,
-                              configuration.waste_operation_activity,
-                              configuration.waste_operationt_value_names,
-                              configuration.waste_operation_unit)
-
-    # travel_business_travel
-    generate_specific_es_data(Category.travel_business_travel,
-                              configuration.travel_business_travel_activity,
-                              configuration.travel_business_travel_value_names,
-                              configuration.travel_business_travel_unit)
-
-    # travel_employee_commuting
-    generate_specific_es_data(Category.travel_employee_commuting,
-                              configuration.travel_employee_commuting_activity,
-                              configuration.travel_employee_commuting_value_names,
-                              configuration.travel_employee_commuting_unit)
-
-    # scope1
-    generate_specific_es_data(Category.scope1,
-                              configuration.scope1_activity,
-                              configuration.scope1_value_names,
-                              configuration.scope1_unit)
-
-    # scope2
-    generate_specific_es_data(Category.scope2,
-                              configuration.scope2_activity,
-                              configuration.scope2_value_names,
-                              configuration.scope2_unit)
+                    # generate es data
+                    generate_specific_es_data(file_name,
+                                              category["activities"],
+                                              category["value_name"],
+                                              category["unit"])
 
 
 def upload_excels_to_oss():
@@ -707,7 +657,6 @@ if __name__ == '__main__':
     json_path = "./data/json"
     xlsx_path = "./data/xlsx"
 
-    generate_es_data()
-    generate_oss_data_excel()
-    upload_excels_to_oss()
+    generate_mock_data()
+    # upload_excels_to_oss()
     # mysql_operation()
