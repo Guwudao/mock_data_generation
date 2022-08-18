@@ -1,5 +1,7 @@
 {
-	"mock": [
+	"ossMockupEnabled": true,
+	"esMockupEnabled": false,
+	"mockData": [
 		{
 			"pillar":  "scope1",
 			"categories": [
@@ -28,30 +30,30 @@
 				{
 					"name": "upstreamTransportation",
 					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air",
-                            "distancebased_road", "distancebased_sea", "moneybased_amount"],
+							"distancebased_road", "distancebased_sea", "moneybased_amount"],
 					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight",
-                                        "Distance*Weight", "Amount"],
+										"Distance*Weight", "Amount"],
 					"unit": ["kg", "kWh", "kg", "tonne-km", "tonne-km", "tonne-km", "CNY"]
 				},
 				{
 					"name": "downstreamTransportation",
 					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air",
-                            "distancebased_road", "distancebased_sea", "moneybased_amount"],
+							"distancebased_road", "distancebased_sea", "moneybased_amount"],
 					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance*Weight", "Distance*Weight",
-                                        "Distance*Weight", "Amount"],
+										"Distance*Weight", "Amount"],
 					"unit": ["kg", "kWh", "kg", "tonne-km", "tonne-km", "tonne-km", "CNY"]
 				},
 				{
 					"name": "upstreamDistribution",
 					"activities": ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
-                          "siteSpecific_space"],
+						  "siteSpecific_space"],
 					"value_name": ["Fuel", "Electricity", "Refrigerant", "Square"],
 					"unit": ["kg", "kWh", "kg", "m3"]
 				},
 				{
 					"name": "downstreamDistribution",
 					"activities": ["siteSpecific_fuel", "siteSpecific_electricity", "siteSpecific_refrigerant",
-                          "siteSpecific_space"],
+						  "siteSpecific_space"],
 					"value_name": ["Fuel", "Electricity", "Refrigerant", "Square"],
 					"unit": ["kg", "kWh", "kg", "m3"]
 				}
@@ -79,7 +81,8 @@
 			"categories": [
 				{
 					"name": "businessTravel",
-					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air", "distancebased_road", "distancebased_accommodation", "moneybased_amount"],
+					"activities": ["fuelbased_fuel", "fuelbased_electricity", "fuelbased_refrigerant", "distancebased_air",
+						"distancebased_road", "distancebased_accommodation", "moneybased_amount"],
 					"value_name": ["Fuel", "Electricity", "Refrigerant", "Distance", "Distance", "Count*Nights", "Amount"],
 					"unit": ["kg", "kWh", "kg", "km", "km", "person-night", "CNY"]
 				},
@@ -97,6 +100,62 @@
 				{
 					"name": "investments",
 					"activities": ["listedEquityCorpBonds_shares"],
+					"value_name": ["Unit"],
+					"unit": ["kg"]
+				}
+			]
+		},
+		{
+			"pillar":  "processing",
+			"categories": [
+				{
+					"name": "siteSpecific",
+					"activities": ["refrigerant", "electricity", "waste"],
+					"value_name": ["Refrigerant", "Electricity", "Weight"],
+					"unit": ["kg", "kWh", "kg"]
+				}
+			]
+		},
+		{
+			"pillar":  "fuelAndEnergy",
+			"categories": [
+				{
+					"name": "useofsold",
+					"activities": ["supplierspecific_ef"],
+					"value_name": ["Fuel"],
+					"unit": ["kg"]
+				}
+			]
+		},
+		{
+			"pillar":  "franchises",
+			"categories": [
+				{
+					"name": "fuelConsumption",
+					"activities": ["fuel"],
+					"value_name": ["Fuel"],
+					"unit": ["kg"]
+				},
+				{
+					"name": "electricityConsumption",
+					"activities": ["electricity"],
+					"value_name": ["Electricity"],
+					"unit": ["kWh"]
+				}
+			]
+		},
+		{
+			"pillar":  "purchases",
+			"categories": [
+				{
+					"name": "capitalGoods",
+					"activities": ["capitalgoods"],
+					"value_name": ["Unit"],
+					"unit": ["kg"]
+				},
+				{
+					"name": "goodsAndServices",
+					"activities": ["goodsandservices"],
 					"value_name": ["Unit"],
 					"unit": ["kg"]
 				}

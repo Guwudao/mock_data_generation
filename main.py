@@ -10,7 +10,6 @@ from enum import Enum
 import json
 from activity_es_data_generation import push_es_data, get_time
 import uuid
-import configuration
 from sqlalchemy import create_engine
 from urllib import parse
 
@@ -27,6 +26,12 @@ class Category(Enum):
     scope1 = "scope1_scope1"
     scope2 = "scope2_scope2"
     assetsInvestments = "assetsInvestments_investments"
+    processing_site_specific = "processing_siteSpecific"
+    fuelAndEnergy_useofsold = "fuelAndEnergy_useofsold"
+    purchases_capitalGoods = "purchases_capitalGoods"
+    purchases_goodsAndServices = "purchases_goodsAndServices"
+    franchises_fuel_consumption = "franchises_fuelConsumption"
+    franchises_electricity_consumption = "franchises_electricityConsumption"
 
 
 def get_random_date():
@@ -329,6 +334,108 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 }
                 source.append(source_dict)
 
+        elif category_name == Category.processing_site_specific.value:
+            for i in range(get_random_data_quantity()):
+                source_dict = {
+                    "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
+                    "store_id": np.random.randint(1, 50),
+                    "id": uuid.uuid4().hex,
+                    "activity": category_name + "_" + sheet,
+                    "isic_section": "D - Electricity; gas; steam and air conditioning supply",
+                    "date_created": get_today(),
+                    "special_activity_type": "market activity",
+                    "unit": unit_value,
+                    "pillar": "Processing",
+                    "geography": raw_data.scope2_geography[np.random.randint(0, 40)],
+                    "isic_classification": raw_data.scope1_isic_classification[np.random.randint(0, 3)],
+                    "scope": "scope3",
+                    "category": "siteSpecific",
+                    "status": "NEW",
+                    "sector": "Processing",
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name.lower(): np.random.randint(1000, 9999)
+                    }
+                }
+                source.append(source_dict)
+
+        elif category_name == Category.fuelAndEnergy_useofsold.value:
+            for i in range(get_random_data_quantity()):
+                source_dict = {
+                    "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
+                    "store_id": np.random.randint(1, 50),
+                    "id": uuid.uuid4().hex,
+                    "activity": category_name + "_" + sheet,
+                    "isic_section": "D - Electricity; gas; steam and air conditioning supply",
+                    "date_created": get_today(),
+                    "special_activity_type": "market activity",
+                    "unit": unit_value,
+                    "pillar": "FuelAndEnergy",
+                    "geography": raw_data.scope2_geography[np.random.randint(0, 40)],
+                    "isic_classification": raw_data.scope1_isic_classification[np.random.randint(0, 3)],
+                    "scope": "scope3",
+                    "category": "useOfSold",
+                    "status": "NEW",
+                    "sector": "useOfSold",
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name.lower(): np.random.randint(1000, 9999)
+                    }
+                }
+                source.append(source_dict)
+
+        elif category_name in [Category.franchises_fuel_consumption.value,
+                               Category.franchises_electricity_consumption]:
+            for i in range(get_random_data_quantity()):
+                source_dict = {
+                    "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
+                    "store_id": np.random.randint(1, 50),
+                    "id": uuid.uuid4().hex,
+                    "activity": category_name + "_" + sheet,
+                    "isic_section": "D - Electricity; gas; steam and air conditioning supply",
+                    "date_created": get_today(),
+                    "special_activity_type": "market activity",
+                    "unit": unit_value,
+                    "pillar": "franchises",
+                    "geography": raw_data.scope2_geography[np.random.randint(0, 40)],
+                    "isic_classification": raw_data.scope1_isic_classification[np.random.randint(0, 3)],
+                    "scope": "scope3",
+                    "category": "energyconsumption",
+                    "status": "NEW",
+                    "sector": "energyconsumption",
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name.lower(): np.random.randint(1000, 9999)
+                    }
+                }
+                source.append(source_dict)
+
+        elif category_name in [Category.purchases_capitalGoods.value,
+                               Category.purchases_goodsAndServices.value]:
+            for i in range(get_random_data_quantity()):
+                source_dict = {
+                    "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
+                    "store_id": np.random.randint(1, 50),
+                    "id": uuid.uuid4().hex,
+                    "activity": category_name + "_" + sheet,
+                    "isic_section": "D - Electricity; gas; steam and air conditioning supply",
+                    "date_created": get_today(),
+                    "special_activity_type": "market activity",
+                    "unit": unit_value,
+                    "pillar": "purchases",
+                    "geography": raw_data.scope2_geography[np.random.randint(0, 40)],
+                    "isic_classification": raw_data.scope1_isic_classification[np.random.randint(0, 3)],
+                    "scope": "scope3",
+                    "category": "goodsandservice",
+                    "status": "NEW",
+                    "sector": "goodsandservice",
+                    "time_period": get_random_date(),
+                    "data_fields": {
+                        value_name.lower(): np.random.randint(1000, 9999)
+                    }
+                }
+                source.append(source_dict)
+
         elif category_name == Category.assetsInvestments.value:
             for i in range(1):
                 source_dict = {
@@ -340,11 +447,11 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                     "date_created": get_today(),
                     "special_activity_type": "market activity",
                     "unit": unit_value,
-                    "pillar": "scope3",
+                    "pillar": "assetsInvestments",
                     "geography": raw_data.scope2_geography[np.random.randint(0, 40)],
                     "isic_classification": raw_data.scope1_isic_classification[np.random.randint(0, 3)],
                     "scope": "scope3",
-                    "category": "scope3",
+                    "category": "investments",
                     "status": "NEW",
                     "sector": raw_data.asset_investment_sector[np.random.randint(1, 10)],
                     "time_period": get_random_date()
@@ -376,23 +483,26 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
 
             activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
-            activity_uuid.append(uuid.uuid4().hex)
+            counts = get_random_data_quantity()
+
+            for i in range(counts):
+                activity_uuid.append(uuid.uuid4().hex)
+                store_id.append(np.random.randint(1, 50))
+                time_period.append(get_random_date())
+                unit.append(unit_value)
+                scope.append("scope3")
+
             if category_name in [Category.logistics_upstream_transportation.value,
                                  Category.logistics_downstream_transportation.value,
                                  Category.logistics_upstream_distribution.value,
                                  Category.logistics_downstream_distribution.value]:
-                for i in range(get_random_data_quantity()):
-                    activity_uuid.append(uuid.uuid4().hex)
+                for i in range(counts):
                     activity_name.append(raw_data.logistics_activity_name[np.random.randint(0, 120)])
-                    store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.logistics_geography[np.random.randint(0, 19)])
                     special_activity_type.append("ordinary transforming activity")
                     sector.append("Transport")
                     isic_classification.append(raw_data.logistics_isic_classification[np.random.randint(0, 8)])
                     isic_section.append("H - Transportation and storage")
-                    time_period.append(get_random_date())
-                    scope.append("scope3")
-                    unit.append(unit_value)
 
                     if "Distance*Weight" in value_name:
                         # unit为 距离x重量 时value为20-50避免值太大影响图标比例
@@ -404,18 +514,13 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                         value2.append(np.random.randint(1000, 10000))
 
             elif category_name == Category.travel_business_travel.value:
-                for i in range(get_random_data_quantity()):
-                    activity_uuid.append(uuid.uuid4().hex)
+                for i in range(counts):
                     activity_name.append(raw_data.travel_transport_activity_name[np.random.randint(0, 17)])
-                    store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.travel_transport_geography[np.random.randint(0, 7)])
                     special_activity_type.append("ordinary transforming activity")
                     sector.append("Transport")
                     isic_classification.append(raw_data.travel_transport_isic_classification[np.random.randint(0, 4)])
                     isic_section.append("H - Transportation and storage")
-                    time_period.append(get_random_date())
-                    scope.append("scope3")
-                    unit.append(unit_value)
 
                     if "Nights" in value_name:
                         # unit为Nights时value为个位数
@@ -431,70 +536,59 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                         value2.append(np.random.randint(100, 999))
 
             elif category_name == Category.travel_employee_commuting.value:
-                for i in range(get_random_data_quantity()):
-                    activity_uuid.append(uuid.uuid4().hex)
+                for i in range(counts):
                     activity_name.append(raw_data.travel_accommodation_activity_name[np.random.randint(0, 4)])
-                    store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.purchase_geography[np.random.randint(0, 110)])
                     special_activity_type.append("ordinary transforming activity")
                     sector.append("Infrastructure & Machinery")
                     isic_classification.append("5510:Short term accommodation activities")
                     isic_section.append("I - Accommodation and food service activities")
-                    time_period.append(get_random_date())
-                    scope.append("scope3")
-                    unit.append(unit_value)
                     value1.append(np.random.randint(100, 999))
                     value2.append(np.random.randint(100, 999))
 
             elif category_name == Category.waste_operation.value or category_name == Category.waste_end_life.value:
-                for i in range(get_random_data_quantity()):
-                    activity_uuid.append(uuid.uuid4().hex)
+                for i in range(counts):
                     activity_name.append(raw_data.waste_activity_name[np.random.randint(0, 520)])
-                    store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.waste_geography[np.random.randint(0, 40)])
                     special_activity_type.append("ordinary transforming activity")
                     sector.append("Waste Treatment & Recycling")
                     isic_classification.append(raw_data.waste_isic_classification[np.random.randint(0, 13)])
                     isic_section.append(raw_data.waste_isic_sector[np.random.randint(0, 4)])
-                    time_period.append(get_random_date())
-                    scope.append("scope3")
-                    unit.append(unit_value)
                     value1.append(np.random.randint(1000, 10000))
                     value2.append(np.random.randint(1000, 10000))
 
             elif category_name == Category.scope1.value:
-                for i in range(get_random_data_quantity()):
-                    activity_uuid.append(uuid.uuid4().hex)
+                scope.clear()
+                for i in range(counts):
                     activity_name.append(raw_data.scope1_activity_name[np.random.randint(0, 176)])
-                    store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.scope1_geography[np.random.randint(0, 230)])
                     special_activity_type.append("ordinary transforming activity")
                     sector.append("Transport")
                     isic_classification.append(raw_data.scope1_isic_classification[np.random.randint(0, 3)])
                     isic_section.append("D - Electricity; gas; steam and air conditioning supply")
-                    time_period.append(get_random_date())
                     scope.append("scope1")
-                    unit.append(unit_value)
                     value1.append(np.random.randint(1000, 9999))
 
             elif category_name == Category.scope2.value:
-                for i in range(get_random_data_quantity()):
-                    activity_uuid.append(uuid.uuid4().hex)
+                scope.clear()
+                for i in range(counts):
                     activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
-                    store_id.append(np.random.randint(1, 50))
                     geography.append(raw_data.scope2_geography[np.random.randint(0, 170)])
                     special_activity_type.append("market activity")
                     sector.append("Electricity")
                     isic_classification.append(raw_data.scope1_isic_classification[np.random.randint(0, 3)])
                     isic_section.append("D - Electricity; gas; steam and air conditioning supply")
-                    time_period.append(get_random_date())
                     scope.append("scope2")
-                    unit.append(unit_value)
                     value1.append(np.random.randint(1000, 9999))
 
             elif category_name == Category.assetsInvestments.value:
                 tickers = value_names
                 ticker_values = unit_list
+
+                activity_uuid.clear()
+                time_period.clear()
+                store_id.clear()
+                scope.clear()
                 for i in range(1):
                     activity_uuid.append(uuid.uuid4().hex)
                     activity_name.append(raw_data.scope2_activity_name[np.random.randint(0, 6)])
@@ -506,6 +600,21 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                     isic_section.append("D - Electricity; gas; steam and air conditioning supply")
                     time_period.append(get_random_date())
                     scope.append("scope3")
+
+            elif category_name in [Category.purchases_capitalGoods.value,
+                                   Category.purchases_goodsAndServices.value,
+                                   Category.processing_site_specific.value,
+                                   Category.fuelAndEnergy_useofsold.value,
+                                   Category.franchises_fuel_consumption.value,
+                                   Category.franchises_electricity_consumption.value]:
+                for i in range(counts):
+                    activity_name.append(raw_data.scope1_activity_name[np.random.randint(0, 170)])
+                    geography.append(raw_data.scope2_geography[np.random.randint(0, 170)])
+                    special_activity_type.append("market activity")
+                    sector.append("market activity")
+                    isic_classification.append(raw_data.scope1_isic_classification[np.random.randint(0, 3)])
+                    isic_section.append("D - Electricity; gas; steam and air conditioning supply")
+                    value1.append(np.random.randint(1000, 9999))
 
             else:
                 print("-------- enum mapping error --------")
@@ -536,61 +645,19 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
             print(f"{get_time()} generate random data success! --{category_name}-- --{sheet}--")
 
 
-# EFDB sector mapping
-def sector_mapping(raw_sectors):
-    sectors = []
-
-    for sector in raw_sectors:
-        if "Fishing & Aquaculture" in sector or "Forestry" in sector or "Wood" in sector or "Land Use" in sector:
-            sectors.append("Agriculture/Hunting/Forestry/Fishing")
-
-        elif "Infrastructure & Machinery" in sector:
-            sectors.append("Buildings and Infrastructure")
-
-        elif "Pulp & Paper" in sector or "Textiles" in sector or "Textiles; Agriculture & Animal Husbandry" in sector:
-            sectors.append("Materials")
-
-        elif "Electricity" in sector or "Heat" in sector or "Fuels" in sector:
-            sectors.append("energy")
-
-        elif "Electronics" in sector:
-            sectors.append("Equipment")
-
-        elif "Agriculture & Animal Husbandry" in sector:
-            sectors.append("Livestock Farming")
-
-        elif "Agriculture & Animal Husbandry" in sector or "Cement & Concrete" in sector:
-            sectors.append("Manufacturing")
-
-        elif "Chemicals" in sector or "Metals" in sector or "Minerals" in sector or "Resource Extraction" in sector:
-            sectors.append("Materials")
-
-        elif "Transport" in sector:
-            sectors.append("Transport")
-
-        elif "Waste Treatment & Recycling" in sector:
-            sectors.append("Waste")
-
-        elif "Water Supply" in sector:
-            sectors.append("water")
-
-        else:
-            print("invalid sector: ", sector)
-
-    return sectors
-
-
 def generate_mock_data():
     with open("configuration.json", "r", encoding="utf-8") as f:
         content = json.load(f)
+        oss_enabled = content["ossMockupEnabled"]
+        es_enabled = content["esMockupEnabled"]
 
-        for data in content["mock"]:
-            pillar_name = data["pillar"]
+        for data in content["mockData"]:
+            pillar = data["pillar"]
             for category in data["categories"]:
-                # print(pillar_name + "_" + category["name"])
-                file_name = pillar_name + "_" + category["name"]
+                file_name = pillar + "_" + category["name"]
+                # print(file_name)
 
-                if file_name == Category.assetsInvestments.value:
+                if oss_enabled and file_name == Category.assetsInvestments.value:
                     # assets_investments_investments
                     tickers_names, tickers_values = category["value_name"], category["unit"]
                     for i in range(np.random.randint(8, 12)):
@@ -601,17 +668,18 @@ def generate_mock_data():
                                                tickers_names,
                                                tickers_values)
                 else:
-                    # generate oss xlsx files
-                    generate_specific_oss_data(file_name,
-                                               category["activities"],
-                                               category["value_name"],
-                                               category["unit"])
-
-                    # generate es data
-                    generate_specific_es_data(file_name,
-                                              category["activities"],
-                                              category["value_name"],
-                                              category["unit"])
+                    if oss_enabled:
+                        # generate oss xlsx files
+                        generate_specific_oss_data(file_name,
+                                                   category["activities"],
+                                                   category["value_name"],
+                                                   category["unit"])
+                    if es_enabled:
+                        # generate es data
+                        generate_specific_es_data(file_name,
+                                                  category["activities"],
+                                                  category["value_name"],
+                                                  category["unit"])
 
 
 def upload_excels_to_oss():
