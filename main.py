@@ -38,11 +38,11 @@ def get_random_date():
     now = datetime.datetime.now()
     start_time = (2016, 1, 1, 0, 0, 0, 0, 0, 0)
     end_time = (now.year, now.month, now.day-1, 23, 59, 59, 0, 0, 0)
-    start = time.mktime(start_time)
-    end = time.mktime(end_time)
+    start = int(time.mktime(start_time))
+    end = int(time.mktime(end_time))
     t = random.randint(start, end)
-    date_touple = time.localtime(t)
-    r_date = time.strftime("%Y%m%d", date_touple)
+    date_tuple = time.localtime(t)
+    r_date = time.strftime("%Y%m%d", date_tuple)
     return r_date
 
 
