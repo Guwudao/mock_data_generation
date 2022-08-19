@@ -1,6 +1,6 @@
 {
 	"ossMockupEnabled": true,
-	"esMockupEnabled": false,
+	"esMockupEnabled": true,
 	"mockData": [
 		{
 			"pillar":  "scope1",
@@ -117,7 +117,7 @@
 			]
 		},
 		{
-			"pillar":  "fuelAndEnergy",
+			"pillar":  "fuelEnergy",
 			"categories": [
 				{
 					"name": "useofsold",
@@ -131,9 +131,9 @@
 			"pillar":  "franchises",
 			"categories": [
 				{
-					"name": "fuelConsumption",
-					"activities": ["fuel"],
-					"value_name": ["Fuel"],
+					"name": "refrigerantConsumption",
+					"activities": ["refrigerant"],
+					"value_name": ["Refrigerant"],
 					"unit": ["kg"]
 				},
 				{
