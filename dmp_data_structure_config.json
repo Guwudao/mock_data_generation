@@ -1,0 +1,46 @@
+{
+    "total": 10,
+    "mockData": [
+        {
+            "table": "payment",
+            "fields": ["ID", "pay_billed_date", "pay_method", "pay_amount"],
+            "count": 10
+        },
+        {
+            "table": "three_mall",
+            "fields": ["ID", "purchase_date", "subtotal", "store_code", "category_name", "quantity"],
+            "count": 10
+        },
+        {
+            "table": "roaming_data_cdr",
+            "fields": ["ID", "plan_network", "destination", "source"],
+            "count": 10
+        },
+        {
+            "table": "blacklist_history",
+            "fields": ["ID", "blac_start_date", "blac_end_date"],
+            "count": 10
+        },
+        {
+            "table": "overdue_history",
+            "fields": ["ID", "dsdc_cust_class", "dsdc_txn_datetime", "dsdc_reason_cd"],
+            "count": 10
+        },
+        {
+            "table": "top_districts_location",
+            "fields": ["ID", "district", "subdistrict", "district_duration", "network_type"],
+            "count": 10
+        },
+        {
+            "table": "sales_transaction",
+            "fields": ["ID", "dsal_bank_cd", "dsal_order_cat", "dsal_completion_dt", "dsal_activation_dt", "dsal_payment_type",
+                        "dsal_delive_method", "dsal_delive_loc", "dsal_delive_date"],
+            "count": 10
+        },
+        {
+            "table": "campaign_response",
+            "fields": ["ID", "response", "campaign_purpose", "send_date", "response_date", "channel", "campage_type"],
+            "count": 10
+        }
+    ]
+}

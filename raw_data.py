@@ -99,13 +99,4 @@ ticker = ['FB', 'TCEHY', 'TSM', 'WFC', 'JPM', 'BACHY', 'NVS', 'NVO', 'PFE', 'DIS
 # 10
 asset_investment_sector = ['Technology', 'Financials', 'Health Care', 'Consumer Disc', 'Industrials', 'Consumer Staples', 'Energy', 'Utilities', 'Materials', 'Telecom']
 
-# import pandas as pd
-#
-# data = pd.read_excel("ecoinvent mock data 6-7-22 version 1.0.xlsx")
-# column_data = []
-# for item in data["Sector"]:
-#     column_data.append(item)
-#
-# print(len(column_data))
-# print(len(list(set(column_data))))
-# print(list(set(column_data)))
+suppliers = ["Kuehne + Nagel", "DHL Supply Chain & Global Forwarding", "DSV", "DB Schenker", "C.H. Robinson", "Sinotrans", "Nippon Express", "Expeditors", "UPS Supply Chain Solutions", "CEVA Logistics"]

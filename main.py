@@ -27,10 +27,10 @@ class Category(Enum):
     scope2 = "scope2_scope2"
     assetsInvestments = "assetsInvestments_investments"
     processing_site_specific = "processing_siteSpecific"
-    fuelAndEnergy_useofsold = "fuelAndEnergy_useofsold"
+    fuelEnergy_useofsold = "fuelEnergy_useofsold"
     purchases_capitalGoods = "purchases_capitalGoods"
     purchases_goodsAndServices = "purchases_goodsAndServices"
-    franchises_fuel_consumption = "franchises_fuelConsumption"
+    franchises_refrigerant_consumption = "franchises_refrigerantConsumption"
     franchises_electricity_consumption = "franchises_electricityConsumption"
 
 
@@ -58,7 +58,7 @@ def get_random_data_quantity():
 
 def create_dataframe(activity_name=[], store_id=[], geography=[], special_activity_type=[], sector=[],
                      isic_classification=[], isic_section=[], time_period=[], scope=[], unit=[], values=[],
-                     value_names=[], tickers=[], ticker_values=[]):
+                     value_names=[], tickers=[], ticker_values=[], suppliers=[]):
     data = {}
 
     if len(activity_name) > 0:
@@ -104,6 +104,9 @@ def create_dataframe(activity_name=[], store_id=[], geography=[], special_activi
     if len(tickers) > 0 and len(tickers) == len(ticker_values):
         for ticker, value in zip(tickers, ticker_values):
             data[ticker] = value
+
+    if len(suppliers) > 0:
+        data["Suppliers"] = suppliers
 
     return pd.DataFrame(data)
 
@@ -359,7 +362,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 }
                 source.append(source_dict)
 
-        elif category_name == Category.fuelAndEnergy_useofsold.value:
+        elif category_name == Category.fuelEnergy_useofsold.value:
             for i in range(get_random_data_quantity()):
                 source_dict = {
                     "activity_name": raw_data.scope2_activity_name[np.random.randint(0, 6)],
@@ -384,7 +387,7 @@ def generate_specific_es_data(category_name, sheet_list, value_names, unit_list)
                 }
                 source.append(source_dict)
 
-        elif category_name in [Category.franchises_fuel_consumption.value,
+        elif category_name in [Category.franchises_refrigerant_consumption.value,
                                Category.franchises_electricity_consumption]:
             for i in range(get_random_data_quantity()):
                 source_dict = {
@@ -481,7 +484,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
     with pd.ExcelWriter(f"{xlsx_path}/{category_name}.xlsx") as xlsx:
         for sheet, value_name, unit_value in zip(sheet_list, value_names, unit_list):
 
-            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
+            activity_uuid, activity_name, store_id, geography, special_activity_type, sector, isic_classification, isic_section, time_period, scope, product_uuid, product_group, product_name, unit, value1, value2, tickers, ticker_values, suppliers = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 
             counts = get_random_data_quantity()
 
@@ -503,6 +506,7 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                     sector.append("Transport")
                     isic_classification.append(raw_data.logistics_isic_classification[np.random.randint(0, 8)])
                     isic_section.append("H - Transportation and storage")
+                    suppliers.append(raw_data.suppliers[np.random.randint(0, 10)])
 
                     if "Distance*Weight" in value_name:
                         # unit为 距离x重量 时value为20-50避免值太大影响图标比例
@@ -604,8 +608,8 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
             elif category_name in [Category.purchases_capitalGoods.value,
                                    Category.purchases_goodsAndServices.value,
                                    Category.processing_site_specific.value,
-                                   Category.fuelAndEnergy_useofsold.value,
-                                   Category.franchises_fuel_consumption.value,
+                                   Category.fuelEnergy_useofsold.value,
+                                   Category.franchises_refrigerant_consumption.value,
                                    Category.franchises_electricity_consumption.value]:
                 for i in range(counts):
                     activity_name.append(raw_data.scope1_activity_name[np.random.randint(0, 170)])
@@ -639,14 +643,15 @@ def generate_specific_oss_data(category_name, sheet_list, value_names, unit_list
                 values=value_list,
                 value_names=value_name,
                 tickers=tickers,
-                ticker_values=ticker_values
+                ticker_values=ticker_values,
+                suppliers=suppliers
             )
             df.to_excel(xlsx, sheet_name=sheet, index=False)
             print(f"{get_time()} generate random data success! --{category_name}-- --{sheet}--")
 
 
 def generate_mock_data():
-    with open("configuration.json", "r", encoding="utf-8") as f:
+    with open("pm_config.json", "r", encoding="utf-8") as f:
         content = json.load(f)
         oss_enabled = content["ossMockupEnabled"]
         es_enabled = content["esMockupEnabled"]
@@ -726,5 +731,5 @@ if __name__ == '__main__':
     xlsx_path = "./data/xlsx"
 
     generate_mock_data()
-    # upload_excels_to_oss()
+    upload_excels_to_oss()
     # mysql_operation()
