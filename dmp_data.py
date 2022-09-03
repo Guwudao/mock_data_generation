@@ -10,95 +10,86 @@ import numpy as np
 
 class Mock:
 
-    def __init__(self, data, tables):
-        self.hk_ids = [uuid.uuid4().hex for i in range(100)]
+    def __init__(self, total_id, data, tables):
+        self.hk_ids = [uuid.uuid4().hex for i in range(total_id)]
         self.data = data
         self.tables = tables
-
-    def blacklist_history(self, table, fields, count):
-        values = [self.hk_ids[0:count]]
-        for field in self.data[table]["fields"]:
-            temp = []
-            if field == "AC":
-                continue
-            else:
-                for i in range(count):
-                    temp.append(self.get_random_data(self.data[table][field]))
-
-            values.append(temp)
-        self.create_dataframe(table, fields, values)
-
-    def default(self, table, fields, count):
-        values = [self.hk_ids[0:count]]
-        for field in self.data[table]["fields"]:
-            temp = []
-            if field == "AC":
-                continue
-            else:
-                for i in range(count):
-                    temp.append(self.get_random_data(self.data[table][field]))
-
-            values.append(temp)
-        self.create_dataframe(table, fields, values)
+        self.temp_date = []
 
     def get_random_data(self, field):
-        if type(field) is dict:
-            return random.randint(int(field["start"]), int(field["end"]))
-        elif field == "DATE":
-            return self.get_random_date()
-        elif field == "TIME":
-            return self.get_random_date(is_time=True)
-        else:
-            return field[np.random.randint(0, len(field))]
+        try:
+            if type(field) is dict:
+                return random.randint(int(field["start"]), int(field["end"]))
+            elif field == "DATE":
+                return self.get_random_date()
+            elif field == "EARLY_DATE":
+                return self.get_random_date(is_early=True)
+            elif field == "TIME":
+                return self.get_random_date(is_time=True)
+            elif field == "LATE_DATE":
+                base = self.temp_date.pop(0)
+                return self.get_random_date(base=base)
+            else:
+                return field[np.random.randint(0, len(field))]
+        except Exception as e:
+            print("error with: ", field)
+            print(e)
 
     def get_fields_and_count(self, table):
         return self.data[table]["fields"], self.data[table]["count"]
 
-    def get_random_date(self, is_time=False):
+    def get_random_date(self, is_time=False, base=0, is_early=False):
         now = datetime.datetime.now()
-        start_time = (2016, 1, 1, 0, 0, 0, 0, 0, 0)
+        start_time = (2018, 1, 1, 0, 0, 0, 0, 0, 0)
         end_time = (now.year, now.month, now.day - 1, 23, 59, 59, 0, 0, 0)
         start = int(time.mktime(start_time))
         end = int(time.mktime(end_time))
         t = random.randint(start, end)
-
-        r_date = time.strftime("%Y%m%d", time.localtime(t))
-        # print(time.strftime("%Y%m%d", time.localtime(t + random.randint(100000, 10000000))))
+        if is_early:
+            self.temp_date.append(t)
 
         if is_time:
-            # r_date = radar.random_datetime("1999-07-12T14:12:06", "1999-08-12T14:12:06")
-            r_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t))
-        return r_date
+            return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t))
+
+        if base == 0:
+            return time.strftime("%Y%m%d", time.localtime(t))
+        else:
+            return time.strftime("%Y%m%d", time.localtime(base + random.randint(100000, 10000000)))
 
     def create_dataframe(self, *args):
+        table_name, fields, values = args
+        print("\n" + "=" * 30 + f" {table_name} " + "=" * 30)
         path = "./data/dmp"
         if not os.path.exists(path):
             os.makedirs(path)
 
         dataframe = {}
-        table_name, fields, values = args
         for field, value in zip(fields, values):
             dataframe[field] = value
 
-        print("\n" + "=" * 30 + f" {table_name} " + "=" * 30)
         print(dataframe)
         pd.DataFrame(dataframe).to_csv(f"{path}/{table_name}.csv", index=False)
 
     def start(self):
         for table in self.tables:
-            self.create_tables(table)
+            fields, count = self.get_fields_and_count(table)
+            values = [self.hk_ids[0:count]]
+            for field in self.data[table]["fields"]:
+                temp = []
+                if field == "AC":
+                    continue
+                else:
+                    for i in range(count):
+                        temp.append(self.get_random_data(self.data[table][field]))
 
-    def create_tables(self, table_name):
-        fun = getattr(self, table_name, self.default)
-        fields, count = self.get_fields_and_count(table_name)
-        return fun(table_name, fields, count)
+                values.append(temp)
+            self.create_dataframe(table, fields, values)
 
 
 def dmp_data_generation():
     with open("dmp_config.json", "r", encoding="utf-8") as f:
         content = json.load(f)
-
-        mock = Mock(content["data"], content["tables"])
+        mock = Mock(content["total_id"], content["data"], content["tables"])
         mock.start()
 
 

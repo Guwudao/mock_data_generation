@@ -1,4 +1,5 @@
 {
+    "total_id": 1000,
     "tables": ["payment", "three_mall", "roaming_data_cdr", "blacklist_history", "overdue_history", "top_districts_location",
         "sales_transaction", "campaign_response"],
     "data": {
@@ -37,7 +38,7 @@
             "fields": ["AC", "plan_network", "destination", "source"],
             "count": 10,
             "plan_network": ["3G", "5G", "LTE"],
-            "destination": "TIME",
+            "destination": "HKGH3",
             "source": ["USACG", "CHNCT", "CANRW", "CHNCU", "TZAVC", "KORKF", "USAW6", "GBRHU", "MACHT", "AUSVF", "THACA", "THAWN"]
         },
         "overdue_history": {
@@ -67,17 +68,17 @@
         "blacklist_history": {
             "count": 10,
             "fields": ["AC", "blac_start_date", "blac_end_date"],
-            "blac_start_date": "DATE",
-            "blac_end_date": "DATE"
+            "blac_start_date": "EARLY_DATE",
+            "blac_end_date": "LATE_DATE"
         },
         "sales_transaction": {
             "count": 10,
-            "fields": ["AC", "dsal_bank_cd", "dsal_order_cat", "dsal_completion_dt", "dsal_activation_dt", "dsal_payment_type",
+            "fields": ["AC", "dsal_bank_cd", "dsal_order_cat", "dsal_activation_dt", "dsal_completion_dt", "dsal_payment_type",
                         "dsal_delive_method", "dsal_delive_loc", "dsal_delive_date"],
             "dsal_bank_cd": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             "dsal_order_cat": ["CS", "DI", "CS"],
-            "dsal_completion_dt": "DATE",
-            "dsal_activation_dt": "DATE",
+            "dsal_activation_dt": "EARLY_DATE",
+            "dsal_completion_dt": "LATE_DATE",
             "dsal_payment_type": ["ali_pay", "wechat_pay", "pay_pal", "credit_card", "cash"],
             "dsal_delive_method": ["C", ""],
             "dsal_delive_loc": ["DF2A", "C4WA", "CSPD", "BFPS", "BSPS", "BSPR", "BFPR", "DFS5", "DFSJ", "BFGK", "BFRL"],
@@ -89,8 +90,8 @@
             "response": ["SMS_SUBMITTED", "MMS_SUBMITTED", "MMS_DELIVERED", "MMS_SUBMISSION_FAILED", "MMS_EXPIRED", "EM_SENT",
                         "EM_OPEN", "EM_SOFT_BOUNCE", "EM_HARD_BOUNCE", "EM_CLICK", "SMS_RESPONDED", "CC_UNREACHED", "CC_CONSIDER",
                         "CC_ACCEPTED", "CC_EXCLUSION", "CC_REJECTED", "CC_PBX_RETURN_RESULT"],
-            "send_date": "DATE",
-            "response_date": "DATE",
+            "send_date": "EARLY_DATE",
+            "response_date": "LATE_DATE",
             "channel": ["SMS", "MMS", "Email", "Call"],
             "campage_type": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
         }
