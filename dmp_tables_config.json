@@ -1,0 +1,179 @@
+{
+    "total_id": 1000,
+    "tables": ["demo","customer_details","payment", "three_mall", "roaming_data_cdr", "blacklist_history", "overdue_history", "top_districts_location",
+        "sales_transaction", "campaign_response"],
+    "data": {
+        "demo": {
+            "fields": ["AC", "date", "time", "mobile", "email", "int", "float", "random"],
+            "count": 10,
+            "date": "DATE",
+            "time": "TIME",
+            "mobile": "MOBILE",
+            "email": "EMAIL",
+            "int": {
+                "type": "int",
+                "start": 100,
+                "end": 200
+            },
+            "float": {
+                "type": "float",
+                "start": 100,
+                "end": 200
+            },
+            "random": ["what", "ever", "you", "want", "to", "add"]
+        },
+        "customer_details": {
+            "fields": ["hk_id", "service_account_num", "email", "mobile_num", "gender", "date_of_birth", "marital_status",
+                        "has_children", "education_level", "employment_status", "occupation", "social_media",
+                        "most_frequent_payment_method", "monthly_spending", "projected_channel_preference", "age",
+                        "projected_working_location", "projected_residential_location", "customer_interest", "internet_browser_tagging",
+                        "current_imei_handset_brand", "current_imei_handset_os", "turnoff_5g_past_date", "urls", "domains",
+                        "browse_category"],
+            "count": 100,
+            "service_account_num": {
+                "type": "int",
+                "start": 100000000000000,
+                "end": 999999999999999
+            },
+            "email": "EMAIL",
+            "mobile_num": "MOBILE",
+            "gender": ["Man", "Women"],
+            "date_of_birth": "DATE",
+            "marital_status": ["Single", "Married", "Divorce", "Widowed"],
+            "has_children": ["Y", "N"],
+            "education_level": ["Secondary School or Below", "Diploma or Sub-degree", "University Degree",
+                                "Post Graduate Degree", "Other"],
+            "employment_status": ["Student", "Unemployed", "Employed", "Retired", "Other"],
+            "occupation": ["Arts", "Design", "Office and Administrator Support", "HealthCare", "Business and Financial Operations",
+                            "Computer and Mathematical"],
+            "social_media": ["Facebook", "Instagram", "Twitter", "Youtube", "Tictok"],
+            "most_frequent_payment_method": ["ALI_PAY", "WECHAT_PAY", "PAY_PAL", "CREDIT_CARD", "CASH"],
+            "monthly_spending": {
+                "type": "int",
+                "start": 3000,
+                "end": 30000
+            },
+            "projected_channel_preference": ["Email", "SMS", "MMS", "Call"],
+            "age": {
+                "type": "int",
+                "start": 8,
+                "end": 88
+            },
+            "projected_working_location": ["Islands", "Kwai Tsing", "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan",
+                                            "Tuen Mun", "Yuen Long", "Kowloon City", "Kwun Tong", "Sham Shui Po", "Wong Tai Sin",
+                                            "Yau Tsim Mong", "Central and Western", "Eastern", "Southern", "Wan Chai"],
+            "projected_residential_location": ["Islands", "Kwai Tsing", "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan",
+                                                "Tuen Mun", "Yuen Long", "Kowloon City", "Kwun Tong", "Sham Shui Po", "Wong Tai Sin",
+                                                "Yau Tsim Mong", "Central and Western", "Eastern", "Southern", "Wan Chai"],
+            "customer_interest": ["Beauty & Skin Care", "Fashion", "Movie & TV", "Food & Beverage", "Cryptocurrency & NFT"],
+            "internet_browser_tagging": ["Computers & Electronics/Consumer Electronics", "Finance/Investing/Stocks & Bonds",
+                                        "internet & Telecom/Mobile & Wireless/Mobile Phones", "Shopping"],
+            "current_imei_handset_brand": ["Samsung", "Apple", "HuaWei", "XiaoMi", "Google"],
+            "current_imei_handset_os": ["iOS", "Android"],
+            "turnoff_5g_past_date": ["7", "14", "30"],
+            "urls": ["www.taobao.com", "www.youtu.com", "www.google.com", "www.baidu.com"],
+            "domains": ["www.taobao.com", "www.youtu.com", "www.google.com", "www.baidu.com"],
+            "browse_category": ["Computers & Electronics/Consumer Electronics", "Finance/Investing/Stocks & Bonds",
+                                        "internet & Telecom/Mobile & Wireless/Mobile Phones", "Shopping"]
+        },
+        "payment": {
+            "fields": ["AC", "pay_billed_date", "pay_method", "pay_amount", "pay_cash_code"],
+            "count": 10,
+            "pay_billed_date": "TIME",
+            "pay_method": ["WA", "PP", "AV", "AH", "AA", "VI", "OC", "IL", "CS", "AT", "IA", "HC", "AP", "DD", "WA",
+                        "DC", "FB", "JT", "MP"],
+            "pay_amount": {
+                "type": "int",
+                "start": 1,
+                "end": 9999
+            },
+            "pay_cash_code": ["WAT", "PPO", "AVO", "AHV", "AAO", "IVO", "OCB", "ILO", "CSB", "ATO", "IAO", "HCB", "VIB",
+                            "APA", "DDH", "WAT", "DCB", "FBP", "JTO", "MPP", "ILB"]
+        },
+        "three_mall": {
+            "fields": ["AC", "purchase_date", "subtotal", "store_code", "category_name", "quantity"],
+            "count": 10,
+            "purchase_date": "TIME",
+            "subtotal": {
+                "type": "int",
+                "start": 10,
+                "end": 9999
+            },
+            "store_code": {
+                "type": "int",
+                "start": 1,
+                "end": 9999
+            },
+            "category_name": ["electronics", "clothing", "food", "vehicle"],
+            "quantity": {
+                "type": "int",
+                "start": 1,
+                "end": 99
+            }
+        },
+        "roaming_data_cdr": {
+            "fields": ["AC", "plan_network", "destination", "source"],
+            "count": 10,
+            "plan_network": ["3G", "5G", "LTE"],
+            "destination": ["HKGH3"],
+            "source": ["USACG", "CHNCT", "CANRW", "CHNCU", "TZAVC", "KORKF", "USAW6", "GBRHU", "MACHT", "AUSVF", "THACA", "THAWN"]
+        },
+        "overdue_history": {
+            "count": 10,
+            "fields": ["AC", "dsdc_cust_class", "dsdc_txn_datetime", "dsdc_reason_cd"],
+            "dsdc_cust_class": ["GP", "GPP", "GNP", "GMP"],
+            "dsdc_txn_datetime": "TIME",
+            "dsdc_reason_cd": ["MA2", "MA4", "MAA", "MAE"]
+        },
+        "top_districts_location": {
+            "count": 10,
+            "fields": ["AC", "district", "subdistrict", "district_duration", "network_type"],
+            "district": ["Kowloon City and Hunghom", "LAR", "MTR", "Shatin", "Sham Shui Po", "Tsuen Wan", "Kwai Tsing", "HK Southern",
+                            "Wan Chai and Causeway Bay", "Yau Tsim Mong", "Yuen Long", "HK Eastern", "Kwun Tong", "Sai Kung", "Tai Po",
+                            "Central and Western", "Outlying Island", "Wong Tai Sin", "Tuen Mun", "NT North", "Disneyland"],
+            "subdistrict": ["KowloonCity", "LAR", "MTR", "FoTan MaOnShan", "Sham Shui Po", "Tsuen Wan", "Kwai Tsing",
+                            "HK Southern", "Causeway Bay", "TST", "Yuen Long", "MongKok", "ChaiWan", "NorthPoint", "WanChai",
+                            "ABD PFL", "KlnBay NgauTauKok", "TseungKwanO", "Tai Po", "Central Adm", "YMT Jordan", "HH TKW",
+                            "KwunTong LamTin", "NorthLantau", "SheungWan Western", "QuarryBay SWH", "Wong Tai Sin",
+                            "Tuen Mun", "NT North", "Outlying Island", "Sai Kung", "HV TaiHang", "MAClevel", "Disneyland"],
+            "network_type": ["3GSub", "4GSub", "5GSub"],
+            "district_duration": {
+                "type": "float",
+                "start": "0",
+                "end": "3"
+            }
+        },
+        "blacklist_history": {
+            "count": 10,
+            "fields": ["AC", "blac_start_date", "blac_end_date"],
+            "blac_start_date": "EARLY_DATE",
+            "blac_end_date": "LATE_DATE"
+        },
+        "sales_transaction": {
+            "count": 10,
+            "fields": ["AC", "dsal_bank_cd", "dsal_order_cat", "dsal_activation_dt", "dsal_completion_dt", "dsal_payment_type",
+                        "dsal_delive_method", "dsal_delive_loc", "dsal_delive_date"],
+            "dsal_bank_cd": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            "dsal_order_cat": ["CS", "DI", "CS"],
+            "dsal_activation_dt": "EARLY_DATE",
+            "dsal_completion_dt": "LATE_DATE",
+            "dsal_payment_type": ["ali_pay", "wechat_pay", "pay_pal", "credit_card", "cash"],
+            "dsal_delive_method": ["C", ""],
+            "dsal_delive_loc": ["DF2A", "C4WA", "CSPD", "BFPS", "BSPS", "BSPR", "BFPR", "DFS5", "DFSJ", "BFGK", "BFRL"],
+            "dsal_delive_date": "DATE"
+        },
+        "campaign_response": {
+            "count": 10,
+            "fields": ["AC", "response", "send_date", "response_date", "channel", "campage_type"],
+            "response": ["SMS_SUBMITTED", "MMS_SUBMITTED", "MMS_DELIVERED", "MMS_SUBMISSION_FAILED", "MMS_EXPIRED", "EM_SENT",
+                        "EM_OPEN", "EM_SOFT_BOUNCE", "EM_HARD_BOUNCE", "EM_CLICK", "SMS_RESPONDED", "CC_UNREACHED", "CC_CONSIDER",
+                        "CC_ACCEPTED", "CC_EXCLUSION", "CC_REJECTED", "CC_PBX_RETURN_RESULT"],
+            "purpose": ["Promotion", "Cross-Selling", "Notification", "Retention and Upsell, Upsell", "P and S Promotion",
+                        "Customer Loyalty", "Retention"],
+            "send_date": "EARLY_DATE",
+            "response_date": "LATE_DATE",
+            "channel": ["SMS", "MMS", "Email", "Call"],
+            "campage_type": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+        }
+    }
+}
