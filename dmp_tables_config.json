@@ -1,5 +1,5 @@
 {
-    "total_id": 1000,
+    "total_id": 100,
     "tables": ["demo","customer_details","payment", "three_mall", "roaming_data_cdr", "blacklist_history", "overdue_history", "top_districts_location",
         "sales_transaction", "campaign_response"],
     "data": {
@@ -17,8 +17,8 @@
             },
             "float": {
                 "type": "float",
-                "start": 100,
-                "end": 200
+                "start": 1.5,
+                "end": 2.5
             },
             "random": ["what", "ever", "you", "want", "to", "add"]
         },
@@ -29,7 +29,7 @@
                         "projected_working_location", "projected_residential_location", "customer_interest", "internet_browser_tagging",
                         "current_imei_handset_brand", "current_imei_handset_os", "turnoff_5g_past_date", "urls", "domains",
                         "browse_category"],
-            "count": 100,
+            "count": 10,
             "service_account_num": {
                 "type": "int",
                 "start": 100000000000000,
