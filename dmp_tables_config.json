@@ -139,8 +139,8 @@
             "network_type": ["3GSub", "4GSub", "5GSub"],
             "district_duration": {
                 "type": "float",
-                "start": "0",
-                "end": "3"
+                "start": 0,
+                "end": 3
             }
         },
         "blacklist_history": {

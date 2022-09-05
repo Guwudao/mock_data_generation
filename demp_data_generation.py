@@ -64,34 +64,34 @@ class Generator:
     def default(self):
         print("no implement for this field: ", self.field)
 
-    def list_generation(self):
+    def list_type_generation(self):
         return self.field[np.random.randint(0, len(self.field))]
 
-    def dict_generation(self):
+    def dict_type_generation(self):
         opera_type = self.field["type"]
         start = self.field["start"]
         end = self.field["end"]
 
-        operator_gen = {
+        random_gen = {
             "int": random.randint,
             "float": random.uniform
         }
-        operator = operator_gen[opera_type]
-        return operator(start, end)
+        generator = random_gen[opera_type]
+        return generator(start, end)
+
+    def str_type_generation(self):
+        fun = getattr(self, self.field.lower(), self.default)
+        return fun()
 
     def generate(self, f):
         self.field = f
+        operator_gen = {
+            list: self.list_type_generation,
+            dict: self.dict_type_generation,
+            str: self.str_type_generation
+        }
         try:
-            if isinstance(f, str):
-                fun = getattr(self, f.lower(), self.default)
-                return fun()
-            elif isinstance(f, list):
-                return self.list_generation()
-            elif isinstance(f, dict):
-                return self.dict_generation()
-            else:
-                print("Unsupport data type")
+            operator = operator_gen[type(f)]
+            return operator()
         except Exception as e:
             print("error with: ", f, e)
-
-        
