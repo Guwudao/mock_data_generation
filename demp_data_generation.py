@@ -28,7 +28,8 @@ class Generator:
         else:
             return time.strftime("%Y%m%d", time.localtime(base + random.randint(100000, 30000000)))
 
-    def email(self):
+    @staticmethod
+    def email():
         list_sum = [i for i in range(10)] + ["a", "b", "c", "d", "e", "f", "g", "h", 'i', "j", "k",
                                              "l", "M", "n", "o", "p", "q", "r", "s", "t", "u", "v",
                                              "w", "x", "y", "z"]
@@ -39,12 +40,13 @@ class Generator:
             email_str = email_str + a
         return email_str + random.choice(email_suffix)
 
-    def mobile(self):
+    @staticmethod
+    def mobile():
         mobiles = ["139", "138", "137", "136", "135", "134", "159", "158", "157", "150", "151", "152", "188", "187",
                    "182", "183", "184", "178", "130", "131", "132", "156", "155", "186", "185", "176", "133", "153",
                    "189", "180", "181", "177"]
         number = "0123456789"
-        mobile = random.choice(mobiles) + "".join(random.choice(number) for i in range(8))
+        mobile = random.choice(mobiles) + "".join(random.choice(number) for _ in range(8))
         return mobile
 
     def date(self):
