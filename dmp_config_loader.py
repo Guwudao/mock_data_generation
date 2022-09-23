@@ -79,7 +79,7 @@ def dmp_data_generation():
 dmp_data_generation()
 
 
-# def read_cdp_data(file):
+# def convert_cdp_raw_data(file):
 #     path = "./data/dmp_sample_csv"
 #     if not os.path.exists(path):
 #         os.makedirs(path)
@@ -103,4 +103,4 @@ dmp_data_generation()
 # for root, directories, files in os.walk("./dwh_raw_sample"):
 #     for file in files:
 #         print(file)
-#         read_cdp_data(file)
+#         convert_cdp_raw_data(file)
