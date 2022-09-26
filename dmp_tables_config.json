@@ -1,7 +1,7 @@
 {
     "total_id": 6000,
-    "tables": ["demo","customer_details","payment", "three_mall", "roaming_data_cdr", "blacklist_history", "overdue_history", "top_districts_location",
-        "sales_transaction", "campaign_response"],
+    "tables": ["demo", "customer_details","payment", "three_mall", "roaming_data_cdr", "blacklist_history", "overdue_history",
+        "top_districts_location", "sales_transaction", "campaign_response"],
     "data": {
         "demo": {
             "fields": ["AC", "date", "time", "mobile", "email", "int", "float", "random"],

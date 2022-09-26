@@ -689,8 +689,8 @@ def generate_mock_data():
 
 def upload_excels_to_oss():
     print("\n" + get_time() + "-" * 30 + "  begin to upload files " + "-" * 30)
-    access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'LTAI5tAG24AcqCYzPvvw4ig8')
-    access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'BWZCSGdF3XUeZh50knJap1t6BZ7GiQ')
+    access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'access_key_id')    # replace access_key_id
+    access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'access_key_secret')  # replace access_key_secret
     bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
     endpoint = os.getenv('OSS_TEST_ENDPOINT', 'oss-cn-shenzhen.aliyuncs.com')
 

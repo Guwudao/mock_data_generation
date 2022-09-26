@@ -1,0 +1,6 @@
+
+/data/*
+/.idea/*
+__pycache__/activity_es_data_generation.cpython-39.pyc
+__pycache__/demp_data_generation.cpython-39.pyc
+__pycache__/raw_data.cpython-39.pyc
