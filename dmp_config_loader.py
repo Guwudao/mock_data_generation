@@ -4,7 +4,7 @@ import pandas as pd
 import datetime
 import os
 import oss2
-from demp_data_generation import Generator
+from dmp_data_generation import Generator
 
 
 def get_time():
@@ -55,8 +55,8 @@ class Mock:
 
     def upload_to_oss(self):
         print("\n" + get_time() + "-" * 30 + "  begin to upload files " + "-" * 30)
-        access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'access_key_id')  # replace access_key_id
-        access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'access_key_secret')  # replace access_key_secret
+        access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', os.environ.get("JACKIE_OSS_TEST_ACCESS_KEY_ID"))  # replace access_key_id
+        access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', os.environ.get("JACKIE_OSS_TEST_ACCESS_KEY_SECRET"))  # replace access_key_secret
         bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-ai-model')
         endpoint = os.getenv('OSS_TEST_ENDPOINT', 'oss-cn-shenzhen.aliyuncs.com')
 
@@ -68,6 +68,7 @@ class Mock:
             print(f"{get_time()} {table} ---> upload status: {result.status}")
 
 
+
 def dmp_data_generation():
     with open("dmp_tables_config.json", "r", encoding="utf-8") as f:
         content = json.load(f)
@@ -77,30 +78,3 @@ def dmp_data_generation():
 
 
 dmp_data_generation()
-
-
-# def convert_cdp_raw_data(file):
-#     path = "./data/dmp_sample_csv"
-#     if not os.path.exists(path):
-#         os.makedirs(path)
-#
-#     df = pd.read_csv(f"./dwh_raw_sample/{file}", header=None, error_bad_lines=False)
-#     new_df = {}
-#     for i, column in enumerate(df.loc[0, 0].split("|")):
-#         temp = []
-#         for data in df.loc[1:, 0]:
-#             value = ""
-#             if len(data.split("|")) > i:
-#                 value = data.split("|")[i]
-#             temp.append(value)
-#
-#         print(file, temp)
-#         new_df[column] = temp
-#
-#     pd.DataFrame(new_df).to_csv(f"./{path}/{file}", index=False)
-
-
-# for root, directories, files in os.walk("./dwh_raw_sample"):
-#     for file in files:
-#         print(file)
-#         convert_cdp_raw_data(file)

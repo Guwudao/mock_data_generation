@@ -12,6 +12,7 @@ from activity_es_data_generation import push_es_data, get_time
 import uuid
 from sqlalchemy import create_engine
 from urllib import parse
+import requests
 
 
 class Category(Enum):
@@ -679,28 +680,45 @@ def generate_mock_data():
                                                    category["activities"],
                                                    category["value_name"],
                                                    category["unit"])
+                    else:
+                        print("ossMockupEnabled feature flag disable on pm_config.json")
+
                     if es_enabled:
                         # generate es data
                         generate_specific_es_data(file_name,
                                                   category["activities"],
                                                   category["value_name"],
                                                   category["unit"])
+                    else:
+                        print("esMockupEnabled feature flag disable on pm_config.json")
 
 
 def upload_excels_to_oss():
     print("\n" + get_time() + "-" * 30 + "  begin to upload files " + "-" * 30)
-    access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', 'access_key_id')    # replace access_key_id
-    access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', 'access_key_secret')  # replace access_key_secret
-    bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
-    endpoint = os.getenv('OSS_TEST_ENDPOINT', 'oss-cn-shenzhen.aliyuncs.com')
+    # env_key_id = os.environ.get("JACKIE_OSS_TEST_ACCESS_KEY_ID")
+    # env_key_secret = os.environ.get("JACKIE_OSS_TEST_ACCESS_KEY_SECRET")
 
-    # 创建Bucket对象，所有Object相关的接口都可以通过Bucket对象来进行
-    bucket = oss2.Bucket(oss2.Auth(access_key_id, access_key_secret), endpoint, bucket_name)
+    try:
+        response = requests.get(
+            "http://mse-4fe0fb96-nacos-ans.mse.aliyuncs.com:8848/nacos/v1/cs/configs?dataId=pm_mock_data&group=pm",
+            timeout=60)
+        env_key_id = response.json()["aliyun-oss"]["key-id"]
+        env_key_secret = response.json()["aliyun-oss"]["key-secret"]
 
-    xlsx_list = [xlsx for xlsx in os.listdir(xlsx_path) if "xlsx" in xlsx and "~$" not in xlsx]
-    for xlsx in xlsx_list:
-        result = oss2.resumable_upload(bucket, f"input/{get_today()}/{xlsx}", f"{xlsx_path}/{xlsx}")
-        print(f"{get_time()} {xlsx} ---> upload status: {result.status}")
+        access_key_id = os.getenv('OSS_TEST_ACCESS_KEY_ID', env_key_id)
+        access_key_secret = os.getenv('OSS_TEST_ACCESS_KEY_SECRET', env_key_secret)
+        bucket_name = os.getenv('OSS_TEST_BUCKET', 'apac-lab-process-mining')
+        endpoint = os.getenv('OSS_TEST_ENDPOINT', 'oss-cn-shenzhen.aliyuncs.com')
+
+        # 创建Bucket对象，所有Object相关的接口都可以通过Bucket对象来进行
+        bucket = oss2.Bucket(oss2.Auth(access_key_id, access_key_secret), endpoint, bucket_name)
+
+        xlsx_list = [xlsx for xlsx in os.listdir(xlsx_path) if "xlsx" in xlsx and "~$" not in xlsx]
+        for xlsx in xlsx_list:
+            result = oss2.resumable_upload(bucket, f"input/{get_today()}/{xlsx}", f"{xlsx_path}/{xlsx}")
+            print(f"{get_time()} {xlsx} ---> upload status: {result.status}")
+    except Exception as e:
+        print("upload to oss error: ", e)
 
 
 def mysql_operation():
@@ -730,6 +748,6 @@ if __name__ == '__main__':
     json_path = "./data/json"
     xlsx_path = "./data/xlsx"
 
-    generate_mock_data()
+    # generate_mock_data()
     upload_excels_to_oss()
     # mysql_operation()

@@ -1,6 +1,6 @@
 {
 	"ossMockupEnabled": true,
-	"esMockupEnabled": false,
+	"esMockupEnabled": true,
 	"mockData": [
 		{
 			"pillar":  "scope1",
